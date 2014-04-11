@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title><code>mv-table</code> user documentation</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="title" content="<code>mv-table</code> user documentation"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2013-09-14T14:22-0400"/>
+<meta name="author" content="Mirko Vukovic"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title"><code>mv-table</code> user documentation</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 mv-table</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Table definition and initialization</a></li>
+<li><a href="#sec-1-2">1.2 Accessing table contents</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1 Table row accessors</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-3">1.3 Table saving and loading</a></li>
+<li><a href="#sec-1-4">1.4 Selecting parts of a table</a></li>
+<li><a href="#sec-1-5">1.5 Deriving and combining tables, creating summaries</a>
+<ul>
+<li><a href="#sec-1-5-1">1.5.1 Table summary</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">1.6 Writing methods with tables</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 Dictionary</a>
+<ul>
+<li><a href="#sec-2-1">2.1 Table definition and instantiation</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1 <i>macro</i> <code>deftable</code></a></li>
+<li><a href="#sec-2-1-2">2.1.2 <i>Function</i> <code>maketable</code></a></li>
+<li><a href="#sec-2-1-3">2.1.3 <i>Macro</i> defcolumn</a></li>
+<li><a href="#sec-2-1-4">2.1.4 <i>Function</i> make-schema</a></li>
+<li><a href="#sec-2-1-5">2.1.5 <i>Function</i> not-nullable</a></li>
+<li><a href="#sec-2-1-6">2.1.6 <i>Function</i> extract-schema</a></li>
+<li><a href="#sec-2-1-7">2.1.7 <i>Function</i> schema</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2 Table queries</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1 <i>Function</i> in</a></li>
+<li><a href="#sec-2-2-2">2.2.2 <i>Function</i> select</a></li>
+<li><a href="#sec-2-2-3">2.2.3 <i>Function</i> matching</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3 Table operations</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1 <i>Function</i> delete-all-rows</a></li>
+<li><a href="#sec-2-3-2">2.3.2 <i>Function</i> delete-rows</a></li>
+<li><a href="#sec-2-3-3">2.3.3 <i>Function</i> insert-row</a></li>
+<li><a href="#sec-2-3-4">2.3.4 <i>Function-maybe</i> column</a></li>
+<li><a href="#sec-2-3-5">2.3.5 <i>Function</i> column-value</a></li>
+<li><a href="#sec-2-3-6">2.3.6 <i>Function</i> sort-rows</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-4">2.4 Access to table elements</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1 <i>Macro</i> do-rows</a></li>
+<li><a href="#sec-2-4-2">2.4.2 <i>Function</i> nth-row</a></li>
+<li><a href="#sec-2-4-3">2.4.3 <i>Macro</i> map-rows</a></li>
+<li><a href="#sec-2-4-4">2.4.4 <i>Function</i> <code>table-row</code></a></li>
+<li><a href="#sec-2-4-5">2.4.5 <i>Macro</i> <code>with-columns</code></a></li>
+<li><a href="#sec-2-4-6">2.4.6 <i>Macro</i> <code>with-column-values</code></a></li>
+</ul>
+</li>
+<li><a href="#sec-2-5">2.5 Other operations</a>
+<ul>
+<li><a href="#sec-2-5-1">2.5.1 <i>Function</i> load-table</a></li>
+<li><a href="#sec-2-5-2">2.5.2 <i>Function</i> table</a></li>
+<li><a href="#sec-2-5-3">2.5.3 <i>Function</i> table-size</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> mv-table</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Table definition and initialization</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p>
+   A table is defined using the <code>deftable</code> macro which has a similar
+   syntax as <code>defclass</code>.  An example:
+</p>
+
+
+<pre class="example">(deftable flight-path ()
+  ((time :storage array
+         :element-type 'float)
+   (distance :storage 'foreign-vector
+             :element-type 'double-float)
+   (altitude :documentation "Plane altitude"
+             :element-type 'number)
+   (bearing :storage nil)
+   (radar :element-type 'string
+          :documentation "control tower identifier")
+   (comment :element-type 'string))
+  (:documentation "Table with a plane flight path")
+  (:rows 1500)
+  (:source "Some web site address")
+  (:build-method :column-wise))
+</pre>
+
+<p>
+   The columns of this table are either native vectors,
+   foreign-arrays (from the Antic/Grid library), or undefined,
+   meaning they can be either of the two.  The element type in the
+   columns is also defined, and is supposed to be a valid CL type.
+</p>
+<p>
+   With the table defined, we can make an instance of it, and load it
+</p>
+
+
+<pre class="example">(setf flight-xyz (make-table 'flight-path)
+      (time flight-xyz) a-native-vector
+      (distance flight-xyz) a-foreign-vector
+      (bearing flight-xyz) yet-another-vector)
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Accessing table contents</h3>
+<div class="outline-text-3" id="text-1-2">
+
+<p>   Table contents can be accessed in two ways.
+</p><ul>
+<li>A table-column is accessed using the predefined accessor.  This
+     returns the data structure which stores the data: a native or a
+     foreign vector.  For example
+<ul>
+<li><code>(distance flight-table)</code>
+</li>
+</ul>
+
+</li>
+<li>A table-row is accessed via row-accessor object.
+</li>
+</ul>
+
+
+
+</div>
+
+<div id="outline-container-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> Table row accessors</h4>
+<div class="outline-text-4" id="text-1-2-1">
+
+<p>    A table row accessor is an object that access contents of a table
+    row.  To access a row element, we say
+</p>
+
+
+<pre class="example">(distance table-row)
+(setf (comment table-row) "a comment")    
+</pre>
+
+
+<p>
+    Table rows objects are created like this:
+</p>
+
+
+<pre class="example">(table-row table :where selector-function)
+</pre>
+
+<p>
+    The <code>selector-function</code> is a function that returns true or false
+    for each row.  It's discussed in Ch. 27 of PCL.
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Table saving and loading</h3>
+<div class="outline-text-3" id="text-1-3">
+
+<p>   Tables are serializable: they can be saved into a file and loaded
+   in a later CL session.
+</p>
+
+
+<pre class="example">(save-table stream table)
+(load-table stream)
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Selecting parts of a table</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<p>   <b>Note</b>: This section is motivated by Chapter 27 of Practical
+   Common Lisp.
+</p>
+<p>   
+   From a table we can derive another table with a sub set of columns
+   or rows.  This is done with the <code>select</code> command.  For example,
+   here we get a new table with the time and altitude data while the
+   flight was under JFK's airport control (with apologies to the
+   correct nomenclature)
+</p>
+
+
+<pre class="example">(select flight-xyz :columns '(time altitude)
+        :where (matching flight-xyz (= control-tower "JKF")))
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Deriving and combining tables, creating summaries</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>   A table can be derived from values in one or more tables.  We can
+   also obtain one or more summaries of a table.  This is done with
+   functions and methods whose arguments are tables.
+</p>
+
+
+
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><span class="section-number-4">1.5.1</span> Table summary</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+<p>    Consider the following generic function definition
+</p>
+
+
+<pre class="example">(defgeneric column-max (table &amp;optional columns)
+  (:documentation
+"Return an a-list of column names and their maximum values
+
+If columns is specified, return maxima for those columns.  If
+columns is t (the default value), return maxima for all columns.
+If columns is nil, return nil"))
+</pre>
+
+<p>
+    Now, for 
+</p>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> Writing methods with tables</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Dictionary</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>  This dictionary is based on PCL27.  I have initially copied the
+  list of exported symbols of PCL27.  Not all of them may be
+  necessary for the MOP-based implementation
+</p>
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Table definition and instantiation</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+</div>
+
+<div id="outline-container-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><a name="sl0b63s038g0" id="sl0b63s038g0"></a><span class="section-number-4">2.1.1</span> <i>macro</i> <code>deftable</code></h4>
+<div class="outline-text-4" id="text-2-1-1">
+
+<ul>
+<li id="sec-2-1-1-1">Description<br/>
+     Defines a table via inheritance and column definitions
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> <i>Function</i> <code>maketable</code></h4>
+<div class="outline-text-4" id="text-2-1-2">
+
+
+<ul>
+<li id="sec-2-1-2-1">Description<br/>
+     Makes an instance of a new table.  Columns may be initialized
+     using the column's name (as keyword) argument.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-3" class="outline-4">
+<h4 id="sec-2-1-3"><span class="section-number-4">2.1.3</span> <i>Macro</i> defcolumn</h4>
+<div class="outline-text-4" id="text-2-1-3">
+
+
+<ul>
+<li id="sec-2-1-3-1">Description<br/>
+     Defines a column schema(PCL27)
+
+</li>
+</ul>
+<ul>
+<li id="sec-2-1-3-2">Note:<br/>
+     I am not sure this is a necessary function as columns will be
+     defined in <a href="#sec-2-1-1"><code>deftable</code></a>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-4" class="outline-4">
+<h4 id="sec-2-1-4"><span class="section-number-4">2.1.4</span> <i>Function</i> make-schema</h4>
+<div class="outline-text-4" id="text-2-1-4">
+
+
+
+
+<ul>
+<li id="sec-2-1-4-1">Description<br/>
+     Defines a table schema (PCL27)
+
+</li>
+</ul>
+<ul>
+<li id="sec-2-1-4-2">Note:<br/>
+     I am not sure this is a necessary function as columns will be
+     defined in <a href="#sec-2-1-1"><code>deftable</code></a>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-5" class="outline-4">
+<h4 id="sec-2-1-5"><span class="section-number-4">2.1.5</span> <i>Function</i> not-nullable</h4>
+<div class="outline-text-4" id="text-2-1-5">
+
+
+<ul>
+<li id="sec-2-1-5-1">Description<br/>
+     A value normalizer function that signals an error if <code>nul</code> is
+     submitted.
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-6" class="outline-4">
+<h4 id="sec-2-1-6"><span class="section-number-4">2.1.6</span> <i>Function</i> extract-schema</h4>
+<div class="outline-text-4" id="text-2-1-6">
+
+
+
+<ul>
+<li id="sec-2-1-6-1">Description<br/>
+     Returns a subset of the table's column schemas as a list of slot
+     definitions.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-7" class="outline-4">
+<h4 id="sec-2-1-7"><span class="section-number-4">2.1.7</span> <i>Function</i> schema</h4>
+<div class="outline-text-4" id="text-2-1-7">
+
+
+<ul>
+<li id="sec-2-1-7-1">Description<br/>
+     Returns the table's schema as a list of slot definitions.
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Table queries</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+</div>
+
+<div id="outline-container-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> <i>Function</i> in</h4>
+<div class="outline-text-4" id="text-2-2-1">
+
+<ul>
+<li id="sec-2-2-1-1">Description<br/>
+     PCL27
+<blockquote>
+
+<p>Returns a function that matches rows where a particular column is
+in a given set of values.
+</p>
+</blockquote>
+
+
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> <i>Function</i> select</h4>
+<div class="outline-text-4" id="text-2-2-2">
+
+
+<ul>
+<li id="sec-2-2-2-1">Description<br/>
+     Returns a sub-range of a table based on row and column selections.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-2-3" class="outline-4">
+<h4 id="sec-2-2-3"><span class="section-number-4">2.2.3</span> <i>Function</i> matching</h4>
+<div class="outline-text-4" id="text-2-2-3">
+
+<ul>
+<li id="sec-2-2-3-1">Description<br/>
+     Returns a function that matches rows with specific column values
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Table operations</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+</div>
+
+<div id="outline-container-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> <i>Function</i> delete-all-rows</h4>
+<div class="outline-text-4" id="text-2-3-1">
+
+<ul>
+<li id="sec-2-3-1-1">Description<br/>
+     Delete all table rows
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> <i>Function</i> delete-rows</h4>
+<div class="outline-text-4" id="text-2-3-2">
+
+
+<ul>
+<li id="sec-2-3-2-1">Description<br/>
+     Delete rows that match a particular criteria
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3"><span class="section-number-4">2.3.3</span> <i>Function</i> insert-row</h4>
+<div class="outline-text-4" id="text-2-3-3">
+
+<ul>
+<li id="sec-2-3-3-1">Description<br/>
+     Insert data into the next table row
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-3-4" class="outline-4">
+<h4 id="sec-2-3-4"><span class="section-number-4">2.3.4</span> <i>Function-maybe</i> column</h4>
+<div class="outline-text-4" id="text-2-3-4">
+
+<ul>
+<li id="sec-2-3-4-1">Description<br/>
+     Low level set-efable function that access the table column.  It
+     bypasses sequence type checking.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-3-5" class="outline-4">
+<h4 id="sec-2-3-5"><span class="section-number-4">2.3.5</span> <i>Function</i> column-value</h4>
+<div class="outline-text-4" id="text-2-3-5">
+
+
+<ul>
+<li id="sec-2-3-5-1">Description<br/>
+     Low-level function set-efable  access to a cell value in a column.
+     This function bypasses all type and value checking and
+     normalization.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-3-6" class="outline-4">
+<h4 id="sec-2-3-6"><span class="section-number-4">2.3.6</span> <i>Function</i> sort-rows</h4>
+<div class="outline-text-4" id="text-2-3-6">
+
+
+<ul>
+<li id="sec-2-3-6-1">Description<br/>
+     Sorts rows according to sorting criteria for the specified
+     column names
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Access to table elements</h3>
+<div class="outline-text-3" id="text-2-4">
+
+
+</div>
+
+<div id="outline-container-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> <i>Macro</i> do-rows</h4>
+<div class="outline-text-4" id="text-2-4-1">
+
+<ul>
+<li id="sec-2-4-1-1">Description<br/>
+     Execute body for each row
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="section-number-4">2.4.2</span> <i>Function</i> nth-row</h4>
+<div class="outline-text-4" id="text-2-4-2">
+
+<ul>
+<li id="sec-2-4-2-1">Description<br/>
+     Low level function that returns the nth-row accessor object.
+     Rows will ideally be accessed with the 
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3"><span class="section-number-4">2.4.3</span> <i>Macro</i> map-rows</h4>
+<div class="outline-text-4" id="text-2-4-3">
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4-4" class="outline-4">
+<h4 id="sec-2-4-4"><span class="section-number-4">2.4.4</span> <i>Function</i> <code>table-row</code></h4>
+<div class="outline-text-4" id="text-2-4-4">
+
+
+<ul>
+<li id="sec-2-4-4-1">Description<br/>
+     Returns row accessor object pointing to the first table row that
+     matches the criteria.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-4-5" class="outline-4">
+<h4 id="sec-2-4-5"><span class="section-number-4">2.4.5</span> <i>Macro</i> <code>with-columns</code></h4>
+<div class="outline-text-4" id="text-2-4-5">
+
+
+<ul>
+<li id="sec-2-4-5-1">Description<br/>
+     Binds variables to column vectors.
+
+</li>
+</ul>
+<ul>
+<li id="sec-2-4-5-2">Note<br/>
+     This macro's behavior is undefined if the table uses a matrix for
+     internal storage
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-4-6" class="outline-4">
+<h4 id="sec-2-4-6"><span class="section-number-4">2.4.6</span> <i>Macro</i> <code>with-column-values</code></h4>
+<div class="outline-text-4" id="text-2-4-6">
+
+
+<ul>
+<li id="sec-2-4-6-1">Descritpion<br/>
+     Binds variables to row values
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> Other operations</h3>
+<div class="outline-text-3" id="text-2-5">
+
+
+</div>
+
+<div id="outline-container-2-5-1" class="outline-4">
+<h4 id="sec-2-5-1"><span class="section-number-4">2.5.1</span> <i>Function</i> load-table</h4>
+<div class="outline-text-4" id="text-2-5-1">
+
+<ul>
+<li id="sec-2-5-1-1">Description<br/>
+     load table from stream
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-5-2" class="outline-4">
+<h4 id="sec-2-5-2"><span class="section-number-4">2.5.2</span> <i>Function</i> table</h4>
+<div class="outline-text-4" id="text-2-5-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-2-5-3" class="outline-4">
+<h4 id="sec-2-5-3"><span class="section-number-4">2.5.3</span> <i>Function</i> table-size</h4>
+<div class="outline-text-4" id="text-2-5-3">
+
+<ul>
+<li id="sec-2-5-3-1">Description<br/>
+     Return the number of rows and columns as a two-element list.
+
+
+
+
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2013-09-14T14:22-0400</p>
+<p class="author">Author: Mirko Vukovic</p>
+<p class="creator"><a href="http://orgmode.org">Org</a> version 7.9.3d with <a href="http://www.gnu.org/software/emacs/">Emacs</a> version 24</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

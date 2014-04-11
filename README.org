@@ -1,0 +1,56 @@
+#+title: mv-table
+
+* Aim
+
+  ~mv-table~ is a CL class type used to store tables of data.
+  ~mv-table~'s slots store vectors of values (but see below).  It
+  supports column and row operations.  It also supports query
+  operations that return a sub-set of the table, or an individual
+  value.
+
+
+  Columns in ~mv-table~ are typed.  ~Mv-table~'s cells (element of a
+  vector) can store any object that is an ~atom~.  It can also store
+  other ~mv-table~s.
+
+  Being objects, ~mv-table~ supports inheritance, object
+  initialization, generic functions, and methods.
+
+  Finally, ~mv-table~ supports serialization: tables can be saved
+  into files and loaded at a later CL session.
+
+  ~mv-table~ attempts to replicate facilities provided by R's
+  ~data-frame~ ([[http://cran.r-project.org/doc/manuals/r-release/R-intro.html#Data-frames][data-frame documentation]]).  In addition, it replicates
+  some of data base facilities (for motivation, see [[http://www.gigamonkeys.com/book/practical-an-mp3-database.html][Chapter 27]] of
+  [[http://www.gigamonkeys.com/book/][Practical Common Lisp]].  It uses SQL commands for inspiration (see
+  [[http://www.sqlcommands.net/][www.sqlcommands.net]]).
+
+* Background
+
+  ~mv-table~ extends (or specializes) CL's ~standard-class~ using the
+  Meta Object Protocol.  The slots of an ~mv-table~ store the table
+  columns.  Other table information (such as column and row count) are
+  stored separately.
+
+  More importantly, the slots serve as the table schema.  Each slot
+  definition specifies the column name, data type, vector storage type
+  (as a lisp native or foreign array), etc.
+
+**  Tables storage
+    The table columns are stored as either adjustable vectors, simple
+    vectors, or foreign vectors.
+
+    However, the storage can be modified via MOP to be in terms of
+    native or foreign matrix or even disk files or databases.
+  
+* Documentation
+  The documentation is currently
+  - [[file:doc/user-doc/mv-table-user-documentation.org][User documentation]]
+
+* References
+  - [[http://dev.mysql.com/doc/index.html][my-SQL documentation]]  These files are too large and have too much
+    stuff to download.  I need to find a file with SQL commands
+  - [[http://www.sqlcommands.net/][www.sqlcommands.net]] the most commonly used SQL commands
+  - R [[http://cran.r-project.org/doc/manuals/r-release/R-intro.html#Data-frames][Data frames]]
+  - [[http://common-lisp.net/project/cl-prevalence/][cl-prevalence]]
+  - on-line [[http://www.gigamonkeys.com/book/practical-an-mp3-database.html][Chapter 27]] of PCL

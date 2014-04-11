@@ -1,0 +1,52 @@
+#+title: Developer documentation
+
+* CLOS & MOP implementation of tables as classes
+
+  mv-tables are defined in terms of several metaobject (MO) classes
+  and at least one standard class mixin.
+
+  Table organization, storage and operations are specified using three
+  families of MO classes:
+  - type virtual MO class and its specialized MO classes
+    - column
+      - square.  This type is a sub-type of the column table type
+    - matrix
+  - storage virtual MO class and its specialized MO classes
+    - columns
+    - matrix
+    - file
+    - external
+      - various db-access MO classes
+  - access virtual MO class and its specialized MO classes
+    - sequential
+    - random
+
+
+  Not all MO class combinations are defined in the code.  Instead,
+  they are programatically generated, as discussed in discussed in
+  [MOP, Sect 2.4].
+  
+  When a mv-table is instantiated, it's metaclass is from one of the
+  three organization metaclasses families.  The exact one is specified
+  by the storage and access mix-in metaclasses.
+
+
+  Table meta-data (author, source, min, max row counts, allowed
+  operations, etc), are implemented via the table-md standard class or
+  classes specialized on it.  This class is a mix-in to the mv-table
+  class.
+
+  When the table is instantiated in column mode it has slots storing
+  columns and more slots storing the table meta-data.  The column
+  slots are identified as the class direct slots, while the meta-data
+  slots are identified as inherited slots.
+
+* CLOS & MOP implementation methods on tables
+
+  All methods are defined as generic functions on the virtual MO
+  classes.  Individual specializations define the methods, when they
+  are applicable.
+
+  Thus, for example, (setf (row-index row) new-index) method will have
+  a =:before= method for sequential file-based table that will check
+  that new-index \geq current-index, or else issue an error.
