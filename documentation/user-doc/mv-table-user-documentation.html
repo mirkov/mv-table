@@ -1,0 +1,2704 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title><code>mv-table</code> user documentation</title>
+<!-- 2014-05-27 Tue 14:10 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Mirko Vukovic" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2014 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title"><code>mv-table</code> user documentation</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. mv-table</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Introduction</a></li>
+<li><a href="#sec-1-2">1.2. Table types</a></li>
+<li><a href="#sec-1-3">1.3. Table definition and initialization</a></li>
+<li><a href="#sec-1-4">1.4. File based tables</a></li>
+<li><a href="#sec-1-5">1.5. Built-in column-types</a>
+<ul>
+<li><a href="#sec-1-5-1">1.5.1. Note 1</a></li>
+<li><a href="#sec-1-5-2">1.5.2. Note 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Table types</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Table states</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1. States of column tables</a></li>
+<li><a href="#sec-2-1-2">2.1.2. States of square tables</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2. Table meta-data</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. mv-table by example</a>
+<ul>
+<li><a href="#sec-3-1">3.1. Building tables</a>
+<ul>
+<li><a href="#sec-3-1-1">3.1.1. Introductory example</a></li>
+<li><a href="#sec-3-1-2">3.1.2. Using reading and writing tables</a></li>
+<li><a href="#sec-3-1-3">3.1.3. How tables store data</a></li>
+<li><a href="#sec-3-1-4">3.1.4. Table initialization via initforms and initiargs</a></li>
+<li><a href="#sec-3-1-5">3.1.5. Table inheritance</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-2">3.2. Accessing table contents</a>
+<ul>
+<li><a href="#sec-3-2-1">3.2.1. Low level/developer methods</a></li>
+<li><a href="#sec-3-2-2">3.2.2. High level/user access methods</a></li>
+<li><a href="#sec-3-2-3">3.2.3. Column accessor</a></li>
+<li><a href="#sec-3-2-4">3.2.4. Table saving and loading</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-3">3.3. Selecting parts of a table</a></li>
+<li><a href="#sec-3-4">3.4. Generic functions and methods: Deriving and combining tables, creating summaries</a>
+<ul>
+<li><a href="#sec-3-4-1">3.4.1. Writing methods with tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Dictionary</a>
+<ul>
+<li><a href="#sec-4-1">4.1. Table definition and instantiation</a>
+<ul>
+<li><a href="#sec-4-1-1">4.1.1. <i>macro</i> <code>deftable</code></a></li>
+<li><a href="#sec-4-1-2">4.1.2. <i>Function</i> <code>make-table</code></a></li>
+<li><a href="#sec-4-1-3">4.1.3. <i>Macro</i> defcolumn</a></li>
+<li><a href="#sec-4-1-4">4.1.4. <i>Function</i> not-nullable</a></li>
+<li><a href="#sec-4-1-5">4.1.5. <i>Function</i> extract-schema</a></li>
+<li><a href="#sec-4-1-6">4.1.6. <i>Function</i> schema</a></li>
+<li><a href="#sec-4-1-7">4.1.7. <i>Generic Function</i> update-instance-for-redefined-table</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-2">4.2. Table queries</a>
+<ul>
+<li><a href="#sec-4-2-1">4.2.1. <i>Function</i> <b>in</b></a></li>
+<li><a href="#sec-4-2-2">4.2.2. <i>Function</i> <b>select</b></a></li>
+<li><a href="#sec-4-2-3">4.2.3. <i>Function</i> matching</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-3">4.3. Table operations</a>
+<ul>
+<li><a href="#sec-4-3-1">4.3.1. <i>Function</i> delete-all-rows</a></li>
+<li><a href="#sec-4-3-2">4.3.2. <i>Function</i> delete-rows</a></li>
+<li><a href="#sec-4-3-3">4.3.3. <i>Function</i> insert-row</a></li>
+<li><a href="#sec-4-3-4">4.3.4. <i>Function-maybe</i> column</a></li>
+<li><a href="#sec-4-3-5">4.3.5. <i>Function</i> column-value</a></li>
+<li><a href="#sec-4-3-6">4.3.6. <i>Function</i> sorted-rows</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-4">4.4. Access to table elements</a>
+<ul>
+<li><a href="#sec-4-4-1">4.4.1. <i>Function</i> <b>advance-row</b></a></li>
+<li><a href="#sec-4-4-2">4.4.2. <i>Function</i> <code>cell-value</code></a></li>
+<li><a href="#sec-4-4-3">4.4.3. <i>Function</i> <code>column-values</code></a></li>
+<li><a href="#sec-4-4-4">4.4.4. <i>Macro</i> <b>do-rows</b></a></li>
+<li><a href="#sec-4-4-5">4.4.5. <i>Macro</i> <b>do-rows*</b></a></li>
+<li><a href="#sec-4-4-6">4.4.6. <i>Condition</i> <b>end-of-table</b></a></li>
+<li><a href="#sec-4-4-7">4.4.7. <i>Function</i> nth-row</a></li>
+<li><a href="#sec-4-4-8">4.4.8. <i>Macro</i> map-rows</a></li>
+<li><a href="#sec-4-4-9">4.4.9. <i>Condition</i> <code>nonexistent-row</code></a></li>
+<li><a href="#sec-4-4-10">4.4.10. <i>Condition</i> <code>nonexistent-column</code></a></li>
+<li><a href="#sec-4-4-11">4.4.11. <i>Function</i> <b>row-index</b></a></li>
+<li><a href="#sec-4-4-12">4.4.12. <i>Function</i> <code>row-values</code></a></li>
+<li><a href="#sec-4-4-13">4.4.13. <i>Function</i> <code>table-row</code></a></li>
+<li><a href="#sec-4-4-14">4.4.14. <i>Function</i> <code>table-value</code></a></li>
+<li><a href="#sec-4-4-15">4.4.15. <i>Generic Function</i> <b>value</b></a></li>
+<li><a href="#sec-4-4-16">4.4.16. <i>Macro</i> <code>with-columns</code></a></li>
+<li><a href="#sec-4-4-17">4.4.17. <i>Macro</i> <code>with-column-values</code></a></li>
+</ul>
+</li>
+<li><a href="#sec-4-5">4.5. Other operations</a>
+<ul>
+<li><a href="#sec-4-5-1">4.5.1. <i>Function</i> load-table</a></li>
+<li><a href="#sec-4-5-2">4.5.2. <i>Function</i> table</a></li>
+<li><a href="#sec-4-5-3">4.5.3. <i>Function</i> table-size</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> mv-table</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Introduction</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<code>mv-table</code> is a CLOS inspired data structure for storing and
+manipulating columns of data.  It supports several types of
+organization, in-memory storage, access, and operations.  It also
+supports reading to and writing from disk <sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>.
+</p>
+
+<p>
+Being based on CLOS (and implemented using MOP), table definitions
+support inheritance and on-the-fly redefinition upon re-evaluation
+of the <code>deftable</code> form.
+</p>
+
+<p>
+<code>mv-table</code> can store, save and read most of CL's native types.  It
+can also store references to external data objects, such as images
+or documents that reside on disk.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><a id="wu17np515gg0" name="wu17np515gg0"></a><span class="section-number-3">1.2</span> Table types</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+mv-table supports several table types:
+</p>
+<dl class="org-dl">
+<dt> column tables </dt><dd>tables of columns of possibly unequal length.
+Access to table elements is via columns names
+and index of the entry in the column
+</dd>
+<dt> square tables </dt><dd>tables of columns of equal length.  Access to
+table elements is either via columns names and
+row index or rows selection rules (subject to
+some restrictions discussed below) and column
+name.
+
+<p>
+Square tables are a specialization of column
+tables.  They support all operations as column
+tables and add additional ones.
+</p>
+</dd>
+<dt> matrix tables </dt><dd>Store matrices of data of the same type.  The
+primary mean of reference is by row and column
+index
+</dd>
+</dl>
+
+
+
+<p>
+Tables are further defined by access type:
+</p>
+<dl class="org-dl">
+<dt> Random access </dt><dd>The data is in memory or on disk
+using a database
+</dd>
+<dt> Sequential </dt><dd>This type is primarily reserved for tables residing
+on disk.  The two primary operations on these
+tables are row-wise reading or writing.
+
+<p>
+Column tables are accessed column by column, while
+square and matrix tables row by row.
+</p>
+</dd>
+</dl>
+
+
+<p>
+Data storage is implemented in several ways:
+</p>
+<ul class="org-ul">
+<li>In memory as a collection of native or foreign vectors, or as a
+native or foreign matrix, or as a single native vector.
+</li>
+<li>Disk files, such as CSV
+</li>
+<li>External, using external applications (such as databases)
+</li>
+</ul>
+
+<p>
+Memory resident square tables with columns stored as vectors the
+most common and default.  Keys during initialization and slot or
+table  options are used to override the defaults.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><a id="84qh5om04ag0" name="84qh5om04ag0"></a><span class="section-number-3">1.3</span> Table definition and initialization</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Tables are defined using the <code>deftable</code> macro and instantiated
+using the <code>make-instance</code> function.  The table definition and
+instantiation syntax is based on CLOS' <code>defclass</code> and
+=make-instance=<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>.  Under the hood, tables are implemented
+using MOP's extension to CLOS.
+</p>
+
+<p>
+Tables are defined using the <code>deftable</code> macro (similar to
+<code>defclass</code>).  The columns (slots) definitions define the table
+schema.  Tables are instantiated with the <code>make-table</code> function.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><a id="cvj8u6002gg0" name="cvj8u6002gg0"></a><span class="section-number-3">1.4</span> File based tables</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Files of column data (such as CSV) can be considered as tables.
+<code>mv-tables</code> can be access such files using its native syntax.
+</p>
+
+<p>
+File based tables are specified by setting the <code>:organization</code>
+table option to <code>:file</code>.  This implies sequential access.  The
+user has access to only a single row/column of a square or
+matrix/columns table.
+</p>
+
+<p>
+For square or matrix tables, these tables are accessed row by row,
+starting from the first row.  For column tables, they are accessed
+column by column.
+</p>
+
+<p>
+When the <code>:action</code> option is <code>:read-only</code>, the <code>:insert-row</code>
+operation reads a record from the file and places it in the
+<code>current-row</code> row-accessor for square or matrix tables.
+<code>:insert-column</code> will read the contents of the next record into
+the <code>current-column</code> column accessor for column tables.  As an
+example:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(insert-row table stream)
+</pre>
+</div>
+
+<p>
+When the <code>:action</code> option is <code>:write-only</code>, the <code>:insert-row</code> will
+create a new record in the file.
+</p>
+
+<p>
+This format is used mainly for table i/o.  A temporary sequential
+read-only table is created.  Repeated calls to <code>insert-row</code> read
+its contents which are available via the row-accessor.  These
+contents can then be added to an in-memory table.  Using the
+<code>do-rows</code> macro this is done as follows:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(do-rows (read-only-row read-only-table)
+  (insert-row in-memory-table
+	      (row-contents read-only-row)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> Built-in column-types</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+To facilitate saving and reading in of tables from disk, we place
+restrictions on types of values that can be stored in tables.  We
+store only values that can be read in by the lisp reader<sup><a id="fnr.3" name="fnr.3" class="footref" href="#fn.3">3</a></sup> and
+to which we can apply equality and comparison tests.
+</p>
+
+<p>
+Table columns can store all CL types that can be handled by the
+lisp reader.  We list them
+</p>
+<ul class="org-ul">
+<li>symbols (including t, nil, and keyword symbols)
+</li>
+<li>number and its sub-types
+</li>
+<li>characters
+</li>
+<li>string and its sub-types
+</li>
+<li>sequences
+<ul class="org-ul">
+<li>vectors and arrays
+</li>
+<li>lists
+</li>
+<li>foreign vectors and arrays
+</li>
+</ul>
+</li>
+<li>lambda forms
+</li>
+</ul>
+
+
+<p>
+The following table lists the default comparators, and unbound
+values.  Unspecified entries have to be defined by the user in the
+column schema.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Type</th>
+<th scope="col" class="left">Equality</th>
+<th scope="col" class="left">Comparator</th>
+<th scope="col" class="left">Null</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Symbol</td>
+<td class="left">#'eq</td>
+<td class="left">#'string&gt;</td>
+<td class="left">unspecified</td>
+</tr>
+
+<tr>
+<td class="left">Number</td>
+<td class="left">#'=</td>
+<td class="left">#'&gt;</td>
+<td class="left">nil</td>
+</tr>
+
+<tr>
+<td class="left">Character</td>
+<td class="left">#'char=</td>
+<td class="left">#'char&gt;</td>
+<td class="left">nil</td>
+</tr>
+
+<tr>
+<td class="left">String</td>
+<td class="left">#'string=</td>
+<td class="left">#'string&gt;</td>
+<td class="left">nil</td>
+</tr>
+
+<tr>
+<td class="left">Vector</td>
+<td class="left">unspecified</td>
+<td class="left">unspecified</td>
+<td class="left">nil</td>
+</tr>
+
+<tr>
+<td class="left">Array</td>
+<td class="left">unspecified</td>
+<td class="left">unspecified</td>
+<td class="left">nil</td>
+</tr>
+
+<tr>
+<td class="left">List</td>
+<td class="left">unspecified</td>
+<td class="left">unspecified</td>
+<td class="left">unspecified</td>
+</tr>
+
+<tr>
+<td class="left">λ form</td>
+<td class="left">unspecified</td>
+<td class="left">unspecified</td>
+<td class="left">null</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+<div id="outline-container-sec-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><span class="section-number-4">1.5.1</span> Note 1</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<p>
+Storage of vectors and arrays can be modified using the
+<code>value-normalizer</code> function.  The input sequence can be converted
+to a more efficient sequence by that function.  This guarantees
+that the sequence will be stored in the same manner after it is
+read in from the table.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2"><span class="section-number-4">1.5.2</span> Note 2</h4>
+<div class="outline-text-4" id="text-1-5-2">
+<p>
+Lambda forms are evaluated in the following environment:
+</p>
+<ul class="org-ul">
+<li>Table meta-data is available in a lexical environment shared by
+all the lambda forms of that column.  Consequences are
+unspecified if a lambda-form modifies a table meta-data value -
+although it is our intent to provide for that functionality
+</li>
+<li>Each lambda form has access to all the row values via the
+row-accessor for that row.  This means that the lambda form can
+read and set values of other cells in the same row.  The reading
+and setting is done via the reader &amp; writer methods, which
+includes all the checking and normalization procedures.
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Table types</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+There are two types of tables:
+</p>
+<dl class="org-dl">
+<dt> column </dt><dd>columns of unequal length
+</dd>
+<dt> square </dt><dd>columns of equal length
+</dd>
+</dl>
+
+
+<p>
+The <code>column</code> table is the most primitive kind of table.  Their
+properties are compared here:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Property</th>
+<th scope="col" class="left">Column</th>
+<th scope="col" class="left">Square</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Column accessor</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">min, max length</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">Loop over columns</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">Length</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">Element accessor</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">Row selector</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">Loop over rows</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Note that the column tables do not have a row count, only minimum
+and maximum row count
+</p>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Table states</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+When instantiated, the table is in the empty state.  From there,
+things can go in several directions
+</p>
+</div>
+
+<div id="outline-container-sec-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> States of column tables</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<ul class="org-ul">
+<li>empty
+</li>
+<li>to be done
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(defmethod (setf table-column) (vector (table curtain) column-name vector)
+  (when (min-row-count-specified-p table)
+    (if (geq (length vector) (min-row-count table))
+	  (setf min-test t)
+	  (error 'vector-too-short)))
+  (when (max-row-count-specified-p table)
+    (if (leq (length vector) (max-row-count table))
+	(setf max-test t)
+	(error 'vector-too-long)))
+  (setf (slot-value table column-name) vector
+	(min-row-count table) (min (length vector)
+				   (min-row-count table))
+	(max-row-count table) (max (length vector)
+				   (max-row-count table))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> States of square tables</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+Table contents are accessed by 
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Table meta-data</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+A <code>def-table</code> can contain an arbitrary number of meta-data table
+options other than the predefined ones.
+</p>
+
+<p>
+Table meta-data is accessed using the accessor by the same name as
+the meta-data options.
+</p>
+
+<p>
+Meta-data is defined and initialized prior to column
+initialization.
+</p>
+
+<p>
+It is set using the make-table method using keyword arguments.
+This data is available to the <code>initialize-instance</code> <code>:after</code> method
+to initialize column values.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> mv-table by example</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Building tables</h3>
+<div class="outline-text-3" id="text-3-1">
+</div><div id="outline-container-sec-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1"><span class="section-number-4">3.1.1</span> Introductory example</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+A table is defined using the <code>deftable</code> macro which is based on the
+<code>defclass</code> syntax, with some extensions (which are implemented via
+MOP).  An example:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable flight-path ()
+  ((time :storage 'vector
+	 :element-type 'float)
+   (distance :storage 'foreign-vector
+	     :element-type 'double-float)
+   (altitude :documentation "Plane altitude"
+	     :element-type 'number)
+   (bearing :storage nil)
+   (radar :element-type 'string
+	  :documentation "control tower identifier"))
+  (:documentation "Table with a plane flight path")
+  (:build-method :columns)
+  (:max-rows 1500))
+</pre>
+</div>
+<p>
+The columns of this table are either native vectors,
+foreign-vectors (from the Antic/Grid library), or undefined, which
+implies native vectors.  The element type in the columns is also
+defined.  It must be a valid CL type.  The build method specifies
+that we will load the table by loading the columns.  We also
+specify the maximum number of rows the table can hold.
+</p>
+
+<p>
+With the table defined, we can make an instance of it:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setq flight-xyz (make-table 'flight-path))
+</pre>
+</div>
+<p>
+At this point, it is an empty table.  With the table initialized,
+we can load the data:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setf (time flight-xyz) a-sequence
+      (distance flight-xyz) another-sequence
+      (bearing flight-xyz) yet-another-another-sequence)
+</pre>
+</div>
+<p>
+The setf writer methods will try to coerce the supplied sequences
+into the specified vector type and coerce data types according to
+the table schema.
+</p>
+
+<p>
+The column <code>:storage</code> type is important only when we are accessing
+whole columns (such as storing or extracting).  Otherwise, it is
+immaterial.
+</p>
+
+<p>
+The <code>deftable</code> syntax allows for inheritance in table
+definitions.  This is discussed later.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-1-2" class="outline-4">
+<h4 id="sec-3-1-2"><span class="section-number-4">3.1.2</span> Using reading and writing tables</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+Files of column data (such as CSV) can be considered as tables.
+<code>mv-tables</code> can be access such files using its syntax.
+</p>
+
+<p>
+The reading of data and importing it into a table can also be done
+within the table framework, using auxiliary tables.
+</p>
+
+<p>
+Using this framework, we will
+</p>
+<ol class="org-ol">
+<li>Define a table
+</li>
+<li>Make an instance pointing to an existing CSV file.  Sequential
+reading of records is accomplished by sequential access of
+table rows
+</li>
+<li>Create another instance, this one in memory, and load it using
+the first instance
+</li>
+<li>Create another instance, pointing to a new CSV file.  Adding
+new rows to this instance writes records to the new file
+</li>
+</ol>
+
+<p>
+The methods presented very verbose.  But using introspection and
+macrology, the final user interface may be substantially reduced.
+</p>
+
+<p>
+A single table definition will suffice for all instances<sup><a id="fnr.4" name="fnr.4" class="footref" href="#fn.4">4</a></sup>:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable flight-path ()
+  ((time :storage array
+	 :element-type 'float
+	 :initform '(time-entry file))
+   (distance :storage 'foreign-vector
+	     :element-type 'double-float
+	     :initform '(distance-entry file))
+   (altitude :documentation "Plane altitude"
+	     :element-type 'number
+	     :initform '(altitude-entry file))
+   (bearing :storage nil
+	    :initform '(bearing-entry file))
+   (radar :element-type 'string
+	  :documentation "control tower identifier"
+	  :initform '(radar-entry file)))
+  ;; build method, table type, access, sources may be deduced from
+  ;; instantiation arguments, and are unnecessary
+ #| (:build-method :row-wise)
+  (:table-type :sequential)
+  (:access :read-only)
+  (:sources file)|#)
+</pre>
+</div>
+
+<p>
+This table accessing the CSV data on disk is initialized by
+executing
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setf read-only-table
+      (make-table 'flight-path
+		  :source #P"/some-file.txt"
+		  :format :csv
+		  :if-does-not-exist :error))
+</pre>
+</div>
+<p>
+Being sequential, the table can iterate over rows and provide
+access to contents of each row, one at a time.
+</p>
+
+<p>
+The fact that the <i>source</i> is a pathname (or a stream) will
+trigger a mechanism to open the file, sequentially read it using
+defined format, and close it when the end is reached.
+</p>
+
+<p>
+Specifying the source to be a file has side-effects on the table
+definition:
+</p>
+<ul class="org-ul">
+<li>Read-only table
+</li>
+<li>Sequential access
+</li>
+<li>The table source is automatically assigned
+</li>
+</ul>
+
+
+<p>
+We will access the table row, by row.  The row contents will
+automatically be coerced to the required type.  And we will then
+build an in-memory table.
+</p>
+
+<p>
+The in-memory table is instantiated as follows
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setf in-memory-table
+      (make-table 'flight-path))
+</pre>
+</div>
+
+<p>
+We can load the new table as follows:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(do-rows (row read-only-table)
+  (add-row in-memory-table
+	   (row-contents row)))
+</pre>
+</div>
+<p>
+In this code, <code>row</code> is an <i>accessor</i> to the table row.  It is an
+object.  We use this object to get access to row contents.
+</p>
+
+<p>
+One can also use <code>loop</code> and <a href="#sec-4-4-1">advance-row</a>:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(loop :for row = (advance-row table 1 nil :eot)
+   :if (equal row :eot)
+   :do (return)
+   :else :do (add-row in-memory-table
+		      (row-contents row)))
+</pre>
+</div>
+
+<p>
+The first invocation of <code>add-row</code> will set the <code>in-memory-table</code>
+build method to <code>:row-wise</code>
+</p>
+
+
+<p>
+We have used the table machinery to standardize reading of files.
+We can also use it to standardize writing of files.  
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setf output-table
+       (make-table 'flight-path
+		   :source in-memory-table
+		   :format :internal ;; or :csv
+		   :storage #P"/output-file.dat"
+		   :if-exists :supersede))
+</pre>
+</div>
+<p>
+Setting the storage as a file or stream again sets the table as
+</p>
+<ul class="org-ul">
+<li>write-only table
+</li>
+<li>Sequential access
+</li>
+<li>Build-method is <code>row-wise</code>
+</li>
+</ul>
+
+
+<p>
+Adding rows to the table amounts to writing table records to it:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(do-rows (row in-memory-table)
+  (add-row output-table
+	   (row-contents row)))
+(finalize-table)
+</pre>
+</div>
+<p>
+The last statement will close the table (or stream)
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-1-3" class="outline-4">
+<h4 id="sec-3-1-3"><span class="section-number-4">3.1.3</span> How tables store data</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+Storage can be one of
+</p>
+<ul class="org-ul">
+<li>columns
+</li>
+<li>matrix
+</li>
+<li>a file
+</li>
+</ul>
+
+<p>
+The file format (<code>:format</code> keyword) can further be used to
+specify a database or other file format.
+</p>
+
+<p>
+Tables saved under the internal format also save the meta-data.
+CSV tables save the table meta-data in an auxiliary file, also in
+CSV format.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-1-4" class="outline-4">
+<h4 id="sec-3-1-4"><span class="section-number-4">3.1.4</span> Table initialization via initforms and initiargs</h4>
+<div class="outline-text-4" id="text-3-1-4">
+<p>
+We can use initforms and initargs to build a table of sines
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable sin-table ()
+  ((x :storage array
+      :element-type 'float
+      :initform '(range 0 pi 21))
+   (y :storage array
+      :element-type 'float
+      :initform '(sin x)))
+  (:documentation "Table of the sin function"))
+</pre>
+</div>
+<p>
+The x column can be initialized either via make-table or using
+the :default-initargs definition in <code>deftable</code>
+</p>
+
+<p>
+We get a table of 21 values of sin between 0 and 2π with:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(make-table 'sin-table)
+</pre>
+</div>
+
+<p>
+Of course, the following works as well:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(make-instance 'sin-table :x (range 0 1d0 51))
+</pre>
+</div>
+<p>
+Now we have a table of 51 values of <code>sin</code>.
+</p>
+
+<p>
+How does this work?  Because we specified the value of column x,
+the table build method is <code>column</code>.  This allows us to setf values
+of the y column.
+</p>
+
+<p>
+Note that if we change the values of <code>x</code>, the values of <code>y</code> will
+not be automatically updated.  For that, we will have to re-derive
+<code>y</code> explicitly.  Tables have no intelligence or knowledge of data
+dependency.  That has to be added by the user code.
+</p>
+
+
+<p>
+Table contents can be derived from other tables:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable derived ()
+  ((sum :storage array
+	:element-type 'float)))
+
+(defmethod initialize-instance :after ((self derived) &amp;key t1 t2
+							&amp;allow-other-keys)
+  (setf (column self 'sum)
+	(map-rows (lambda (row-t1 row-t2)
+		    (+ (column-value row-t1 'A)
+		       (column-value row-t2 'B)))
+		  t1 t2)))
+</pre>
+</div>
+<p>
+This object initializes the <code>sum</code> column using values of
+columns A and B from tables t1 and t2 respectively.
+</p>
+
+
+<p>
+A final example of a table initialization involves table
+meta-data.  We define a table that will compute the calendar for a
+month.  The year and month are stored as the :meta-data table
+options.  Their values are available in the <code>initialize-instance</code>
+<code>:after</code> method.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable calendar ()
+  ((day)
+   (day-of-week))
+  (:meta-data
+   :year
+   :month))
+
+(defmethod initialize-instance :after ((self calendar) &amp;key
+				       &amp;allow-other-keys)
+  (let* ((days-of-month (days-of-month (year self) (month self)))
+	 (days-of-week (mapcar (lambda (day)
+				 (day-of-week (year self) (month self)
+					      day))
+			       days-of-month)))
+    (setf (column self 'day) days-of-month
+	  (column self 'day-of-week) days-of-week)))
+</pre>
+</div>
+<p>
+Now, we can generate a yearly calendar.  The meta-data slots are
+available as keyword arguments to <code>make-table</code>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setf *calendar*
+      (mapcar (lambda (month)
+		(make-table 'calendar :year 2013 :month month))
+	      '(0 1 2 3 4 5 6 7 8 9 10 11)))
+</pre>
+</div>
+<p>
+And we can query what day of the week is on September 30th:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(select (eighth *calendar*)
+	:column 'day-of-week
+	:where (matching-row (eightht *calendar*)
+			     (day 30)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3-1-5" class="outline-4">
+<h4 id="sec-3-1-5"><span class="section-number-4">3.1.5</span> Table inheritance</h4>
+<div class="outline-text-4" id="text-3-1-5">
+<p>
+Table definitions can make use of inheritance.  The example on the
+plane route can be generalized using a base class of route
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable route ()
+  (time)
+  (coordinates)
+  (speed)
+  (bearing))
+</pre>
+</div>
+
+<p>
+Now, specializing to planes
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable plane-route (route)
+  ((altitude)
+   (radar)
+   (wind)))
+</pre>
+</div>
+<p>
+And to a ship route
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(deftable ship-route (route)
+  ((wave-height)
+   (current)
+   (officer-on-deck)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Accessing table contents</h3>
+<div class="outline-text-3" id="text-3-2">
+</div><div id="outline-container-sec-3-2-1" class="outline-4">
+<h4 id="sec-3-2-1"><span class="section-number-4">3.2.1</span> Low level/developer methods</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+Mimicking <code>slot-value</code>, setf-able methods <code>column-values</code> and
+<code>row-values</code> give access to the raw contents of a column or row.
+The values are passed as a list, vector or structure.  The special
+variable  <code>*raw-container-type*</code> signals type of container when
+retrieving the values.
+</p>
+
+<p>
+<code>value</code> gives access to a cell value.
+</p>
+
+<p>
+These methods perform no checking or conversion as specified in
+the table schema.  
+</p>
+
+<p>
+Unlike the higher level methods, column/row values can be accessed
+by the column/row index.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-2-2" class="outline-4">
+<h4 id="sec-3-2-2"><span class="section-number-4">3.2.2</span> High level/user access methods</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+Higher level access is provided with column, row, and table value
+accessors.  These return an object that can be queried for its
+values, or into which a value can be placed.  Value retrieval or
+setting triggers all the type and value checking specifications of
+the table schema.
+</p>
+
+<p>
+Both column and row accessors support the <code>export</code> generic
+function.  It will return a sequence of values in the specified
+format (list, vector, or structure for rows).
+</p>
+</div>
+
+<ol class="org-ol"><li>Row accessor<br  /><div class="outline-text-5" id="text-3-2-2-1">
+<p>
+The function <code>select-row</code> returns the row accessor for the first
+row that satisfies the <i>predicate function</i>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(setf *row-accessor* (select-row table predicate-function))
+</pre>
+</div>
+<p>
+The <i>predicate function</i> tests the row against it contents or its
+index, or both.
+</p>
+
+<p>
+<b>Note:</b> What name is better: <code>select-row</code> or <code>table-row</code>?
+</p>
+
+<p>
+One can access or setf the row data using <code>value</code>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(value row-accessor column-name)
+</pre>
+</div>
+<p>
+Finally, one can export the row into a CL sequence
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(export row-accessor &amp;optional (type :list))
+</pre>
+</div>
+<p>
+Export can be one of list, vector, structure (tagged with column
+names) or even foreign-vector (if the row data-type is
+appropriate).
+</p>
+
+<p>
+Row-accessor supports the concept of a row index using the
+<code>row-index</code> function.  This is a setf-able quantity, allowing us
+to use a row-accessor to accesses any table row.
+</p>
+</div>
+</li>
+<li>Iterating over rows<br  /><div class="outline-text-5" id="text-3-2-2-2">
+<p>
+Row iteration is done using the <code>do-rows</code> macro or modifying a
+row-accessor's row-index.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-3-2-3" class="outline-4">
+<h4 id="sec-3-2-3"><span class="section-number-4">3.2.3</span> Column accessor</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+A column is accessed using the column accessor defined in
+<code>deftable</code> column schema.  This accessor returns the column
+accessor object.  Thus for a table <code>calendar</code> with a <code>month</code>
+column, the following returns <code>month</code>'s column accessor
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(month calendar)
+</pre>
+</div>
+
+<p>
+Column data is accessed using the same generic function <code>value</code>
+and either the row index or a predicate function.  The predicate
+function will search the table for the matching row, and return
+that row's column value.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(value column-accessor row-matcher)
+</pre>
+</div>
+<p>
+<code>row-matcher</code> is either a row index or a function that returns
+true on a table row.
+</p>
+</div>
+
+<ol class="org-ol"><li>Iterating over columns<br  /><div class="outline-text-5" id="text-3-2-3-1">
+<p>
+The macro <code>do-columns</code> will iterate over columns.  The iteration
+order is unspecified - it is unrelated to the order of columns in
+the table schema.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-3-2-4" class="outline-4">
+<h4 id="sec-3-2-4"><span class="section-number-4">3.2.4</span> Table saving and loading</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+Tables are serializable: they can be saved into a file and loaded
+in a later CL session.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(save-table stream table)
+(load-table stream)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Selecting parts of a table</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+<b>Note</b>: We use SQL-like syntax for table queries.  This is
+motivated by Chapter 27 of Practical Common Lisp.  
+</p>
+
+<p>
+From a table we can derive another table with a sub set of columns
+or rows.  This is done with the <code>select</code> command.  For example,
+here we get a new table with the time and altitude data while the
+flight was under JFK's airport control (with apologies to the
+correct nomenclature)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(select flight-xyz :columns '(time altitude)
+	:where (matching flight-xyz (= control-tower "JKF")))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> Generic functions and methods: Deriving and combining tables, creating summaries</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+A table can be derived from values in one or more tables.  We can
+also obtain one or more summaries of a table.  This is done with
+functions and methods whose arguments are tables.
+</p>
+</div>
+
+
+
+<ol class="org-ol"><li>Table summary<br  /><div class="outline-text-5" id="text-3-4-0-1">
+<p>
+Consider the following generic function definition
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(defgeneric column-max (table &amp;optional columns)
+  (:documentation
+"Return an a-list of column names and their maximum values
+
+If columns is specified, return maxima for those columns.  If
+columns is t (the default value), return maxima for all columns.
+If columns is nil, return nil"))
+</pre>
+</div>
+<p>
+Now we can define methods on various table types to provide this
+functionality.
+</p>
+</div>
+</li>
+<div id="outline-container-sec-3-4-1" class="outline-4">
+<h4 id="sec-3-4-1"><span class="section-number-4">3.4.1</span> Writing methods with tables</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<p>
+To be done
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Dictionary</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Parts of this dictionary is based on Practical Common Lisp, Chapter
+27 (PCL27).  I have initially copied the list of exported symbols of
+PCL27.  Not all of them may be necessary for the MOP-based
+implementation.
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Table definition and instantiation</h3>
+<div class="outline-text-3" id="text-4-1">
+</div><div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><a id="sl0b63s038g0" name="sl0b63s038g0"></a><span class="section-number-4">4.1.1</span> <i>macro</i> <code>deftable</code></h4>
+<div class="outline-text-4" id="text-4-1-1">
+</div>
+<ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-1-1-1">
+<p>
+<b>deftable</b> table-name ({supertable-name}*) ({column-specifier}*)
+[{}[table-option]{}] &rarr; new-table
+</p>
+
+<dl class="org-dl">
+<dt> column-specifier </dt><dd>column-name | (column-name [{}[column-options]{}])
+</dd>
+<dt> column-name </dt><dd>symbol
+</dd>
+<dt> column-option </dt><dd><ul class="org-ul">
+<li>{:initarg initarg-name} |
+</li>
+<li>{:initform column-initform} |
+</li>
+<li>{:type type-specifier} |
+</li>
+<li>{:documentation string}
+</li>
+<li>{:storage symbol} |
+</li>
+<li>{:action symbol} |
+</li>
+<li>{:value-normalizer lambda-form} |
+</li>
+<li>{:equality-predicate function | lambda-form } |
+</li>
+<li>{:comparator function | lambda-form} |
+</li>
+<li>{:null-value symbol | number | string} |
+</li>
+<li>{:default-value valid-table-entry}
+</li>
+<li>{:lazy-p boolean}
+</li>
+</ul>
+</dd>
+<dt> table-option </dt><dd><ul class="org-ul">
+<li>{:default-initargs . column-initargs} |
+</li>
+<li>{:depends-on parent-table-list} |
+</li>
+<li>{:documentation . string} |
+</li>
+<li>{:type symbol} |
+</li>
+<li>{:layout symbol} |
+</li>
+<li>{:storage symbol} |
+</li>
+<li>{:access symbol}
+</li>
+<li>{:action symbol} |
+</li>
+<li>{:row-count number} |
+</li>
+<li>{:max-row-count number} |
+</li>
+<li>{:min-row-count number}
+</li>
+</ul>
+</dd>
+<dt> table-meta-data </dt><dd><ul class="org-ul">
+<li>{:source path | string | symbol} |
+</li>
+<li>{:author string} |
+</li>
+<li>{keyword | (keyword [type &amp; (:documentation string)])}*
+</li>
+</ul>
+</dd>
+</dl>
+</div>
+</li>
+
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-1-1-2">
+<dl class="org-dl">
+<dt> table-name </dt><dd>a non-nil symbol
+</dd>
+<dt> supertable-name  </dt><dd>a non-nil symbol
+</dd>
+<dt> column-name </dt><dd>a symbol
+</dd>
+<dt> initarg </dt><dd>a symbol
+</dd>
+<dt> column-initargs </dt><dd>a list of column names and initialization
+values
+</dd>
+<dt> column-initform </dt><dd>A form that is evaluated for each column row
+to initialize contents
+</dd>
+<dt> parent-table-list </dt><dd>A list of symbols, naming the tables that
+column initforms will use
+</dd>
+<dt> type-specifier </dt><dd>a CL type specifier
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-1-1-3">
+<p>
+Defines a table schema.  Table option <code>:type</code> specifies the table
+to be of column, square (default), or matrix type.  Not all
+column and table options are compatible with all table types.
+</p>
+
+<p>
+Unlike many options, the table type cannot be overridden with
+<code>make-table</code>.
+</p>
+</div>
+
+<ol class="org-ol"><li>Table options<br  /><div class="outline-text-6" id="text-4-1-1-3-1">
+<p>
+Table <code>:type</code> is one of <code>:column</code>, <code>:square</code> (default), or
+<code>:matrix</code>.  See <a href="#sec-1-2">Table types</a> for discussion of table types.
+</p>
+
+<p>
+Table <code>:layout</code> is used for <code>:square</code> and <code>:matrix</code> tables.  It
+specifies the table layout in memory.  The layout can be either
+<code>:column</code> or <code>:matrix</code>.  It does not impact table functionality
+but can impact access efficiency.
+</p>
+
+<p>
+Table <code>:storage</code> is <code>:file</code>, <code>:memory</code> (default), or
+<code>:external</code>.  This last one implies the data is stored by an
+external application such as a database.
+</p>
+
+<p>
+Table <code>:access</code> is one of <code>:random</code> or <code>:sequential</code>.  <code>:random</code>
+access allows any element, row, or column to be accessed in any
+order.  <code>:sequential</code> tables access only one row at a time, from
+the table top to bottom.
+</p>
+
+<p>
+<code>:file</code> tables support only <code>:sequential</code> access.  <code>:memory</code>
+tables can support <code>:sequential</code> access, but that is not
+customary or necessary.
+</p>
+
+<p>
+<code>:action</code> specifies the types of action on table contents.
+Tables can be <code>:read-only</code>, <code>:write-only</code>, or <code>:read/write</code>
+(default).
+</p>
+
+<p>
+<code>:file</code> tables support one <code>:read-only</code> or <code>:write-only</code>.  For a
+<code>:read-only table</code>, the generic function <code>insert-row</code>
+<code>:read-only</code> table will read a record from the associated file
+and make it available with a row-accessor.  For a <code>:write-only</code>
+table, <code>insert-row</code> will place the next row contents into the
+next record of the specified file.  See <a href="#sec-1-4">File based tables</a> for
+more details.
+</p>
+
+<p>
+Parent tables, declared via <code>:depends-on</code>, and supplied with
+<code>make-table</code> must be of the same length.  These tables determine
+the table row count.
+</p>
+</div>
+
+<ol class="org-ol"><li>Row count options<br  /><div class="outline-text-7" id="text-4-1-1-3-1-1">
+<p>
+The <code>:row-count</code>, <code>:min-row-count</code>, <code>:max-row-count</code> play a
+mixed role.  Some examples are given in the following.
+</p>
+
+<p>
+If a table depends on other tables, <code>row-count</code> is derived from
+the parent tables (all of which must be of same length,
+otherwise, the results are undefined).
+</p>
+
+<p>
+<code>row-count</code> is initially nil.  It is set to non-nil by one of
+the following:
+</p>
+<ul class="org-ul">
+<li>inserting a table row sets it to 1
+<ul class="org-ul">
+<li>Note: Further inserting of table rows increments <code>row-count</code>
+</li>
+</ul>
+</li>
+<li>inserting the first column
+</li>
+</ul>
+
+
+<p>
+In a table that is defined by inserting rows, <code>row-count</code> is a
+status variable.  But when inserting a table column, the column
+must equal the table's <code>row-count</code>
+</p>
+</div>
+</li></ol>
+</li>
+<li>Column options<br  /><div class="outline-text-6" id="text-4-1-1-3-2">
+<p>
+Columns are initialized using <code>:initarg</code> slot and
+<code>:default-initargs</code> table options.  The <code>initialize-instance</code>
+<code>:after</code> method has access to all the initialized columns, and
+can initialize other columns.
+</p>
+
+<p>
+Column <code>:type</code> is specified with the <code>:type</code> column option.
+This is only a specification.  It may or may not be enforced by
+the writer methods.
+</p>
+
+<p>
+For tables with <code>:column</code> organization, <code>:storage</code> specifies the
+CL data structure that stores the data.  It can be one of
+<code>:list</code> <code>:vector</code> <code>:foreign-vector</code>.
+</p>
+
+<p>
+The <code>:value-normalizer</code> function can be used for normalizing the
+data for efficient storage, and in a form appropriate for the
+comparison functions.
+</p>
+
+<p>
+The <code>:comparator</code> and <code>:equality-predicate</code> functions are used
+to compare column entries for sorting and equality purposes.
+</p>
+
+<p>
+<code>:null-value</code> is used to specify a value which when stored
+signals that the value has not been set yet.  Using
+<code>:null-value</code> is optional.  Specifying it allows for some space
+and speed savings.  Otherwise, the table keeps additional
+storage with flags for set and unset cells.  A cell is set to
+null with a call <code>(setf (cell reference) +null+)</code>
+</p>
+
+<p>
+<code>:default-value</code> is the value returned, if the <code>:null-value</code> has
+not been set.
+</p>
+
+<p>
+<code>:lazy-p</code> boolean signals that the column values can be computed
+only when the actual value is requested.
+</p>
+
+<p>
+Columns in an in <code>:memory</code> table can support all of <code>:read-only</code>
+<code>:write-only</code> or <code>:read/write</code> actions.  The actions can be
+changed while the table is in existence. 
+</p>
+</div>
+</li>
+<li>Table (column) initialization via <code>initform</code><br  /><div class="outline-text-6" id="text-4-1-1-3-3">
+<p>
+Column <code>initform</code> is a form that is evaluated in a null lexical
+environment.  It initializes the column contents.  It has access
+to all of table's columns, and to contents of the parent tables
+(see syntax below)
+</p>
+
+<p>
+The syntax is as follows
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(with-column-readers (&amp;rest symbol+accessor-form-pairs)
+  body)
+</pre>
+</div>
+<p>
+where <code>symbol+accessor-form-pairs</code> is a list of a symbol that is
+used to reference a column (the accessor-form).  The accessor
+form is either a symbol, referring to a column in the current
+table, or a list <code>(column-name table-name)</code> with the
+<code>column-name</code> referring to a column from table <code>table-name</code>,
+<code>table-name</code> being one of parent tables declared with the
+<code>:depends-on</code> table option.
+</p>
+</div>
+
+<ol class="org-ol"><li>Implementation note:<br  /><div class="outline-text-7" id="text-4-1-1-3-3-1">
+<p>
+For <code>initform</code> to function properly, the following must be
+satisfied:
+</p>
+<ul class="org-ul">
+<li><code>initform</code> is evaluated in lazy-mode, only when requested
+</li>
+<li>=initform=s should not form a circular dependency
+</li>
+<li><code>initform</code> may depend on columns without <code>initform</code>.   It is
+the users responsibility that all non-=initform= columns have
+values assigned, via <code>initarg</code> or <code>default-initarg</code>
+</li>
+<li>parent tables must be of same length.
+</li>
+</ul>
+</div>
+</li></ol>
+</li>
+
+<li>Table inheritance<br  /><div class="outline-text-6" id="text-4-1-1-3-4">
+<p>
+A table can be defined to inherit the table schema and options
+from one or more tables.  The general rule is that the most
+specific option is inherited.  In case of incompatible options,
+the wining option is from the table that is ahead in the
+inheritance list.
+</p>
+</div>
+
+<ol class="org-ol"><li>Table options inheritance<br  /><div class="outline-text-7" id="text-4-1-1-3-4-1">
+<p>
+Currently not specified
+</p>
+</div>
+</li>
+
+<li>Column option inheritance<br  /><div class="outline-text-7" id="text-4-1-1-3-4-2">
+<p>
+Currently not specified
+</p>
+</div>
+
+<ol class="org-ol"><li>Old draft of column option inheritance<br  /><div class="outline-text-8" id="text-4-1-1-3-4-2-1">
+<p>
+The rules of table inheritance are as follows:
+</p>
+<ul class="org-ul">
+<li>The new table inherits the columns from parent tables
+</li>
+<li>If there is a conflict in the parent tables on a column
+definition, the following applies:
+<dl class="org-dl">
+<dt> <code>storage</code> </dt><dd>The most specific type is applied.  Furthermore,
+if the column definition specifies <code>storage</code>, it
+must be as or more specific than from the
+inherited arrays
+</dd>
+<dt> <code>element type</code> </dt><dd>The most specific element type is applied.
+If the element type is specified, it must
+be subtype of element types of the
+inherited.
+</dd>
+<dt> <code>initform</code> </dt><dd>If it is specified, it overrides the initforms
+of the supertables.  If unspecified, the
+initform of the most specific supertable
+applies
+</dd>
+</dl>
+</li>
+<li><code>init-tables</code> .  If unspecified, it is a union of init-tables of
+the super-tables and the tables specified by <code>init-tables</code>.
+</li>
+<li>For all other properties, the usual class precedence rule apply
+</li>
+</ul>
+</div>
+</li></ol>
+</li></ol>
+</li></ol>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><span class="section-number-4">4.1.2</span> <i>Function</i> <code>make-table</code></h4>
+<div class="outline-text-4" id="text-4-1-2">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-1-2-1">
+<p>
+Makes an instance of a new table.  One can specify table options
+and initialize the table contents.
+</p>
+</div>
+
+<ol class="org-ol"><li>Specifying the table options<br  /><div class="outline-text-6" id="text-4-1-2-1-1">
+<p>
+It is not specified whether tables support overriding table
+options (<code>:type</code>, <code>:organization</code>, <code>:storage</code>, <code>:access</code>,
+<code>:action</code>) via keywords.  It is not clear whether the additional
+flexibility is worth the implementation effort Keywords
+correspond to the table options available in <code>deftable</code>.  The
+keywords override the <code>deftable</code> specification.
+</p>
+</div>
+</li>
+
+<li>Initializing table contents<br  /><div class="outline-text-6" id="text-4-1-2-1-2">
+<p>
+The contents of individual columns are initialized by
+their :keyworded names as initargs.  This sets the table
+to :column-wise loading.
+</p>
+
+<p>
+row-wise loading can be accomplished via the
+<code>initialize-instance</code> <code>:after</code> method.
+</p>
+</div>
+</li></ol>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-1-3" class="outline-4">
+<h4 id="sec-4-1-3"><span class="section-number-4">4.1.3</span> <i>Macro</i> defcolumn</h4>
+<div class="outline-text-4" id="text-4-1-3">
+</div><ol class="org-ol"><li>Note:<br  /><div class="outline-text-5" id="text-4-1-3-1">
+<p>
+I am not sure this is a necessary function as columns will be
+defined in <a href="#sec-4-1-1"><code>deftable</code></a>
+</p>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-1-3-2">
+<p>
+Defines a column schema(PCL27)
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-1-4" class="outline-4">
+<h4 id="sec-4-1-4"><span class="section-number-4">4.1.4</span> <i>Function</i> not-nullable</h4>
+<div class="outline-text-4" id="text-4-1-4">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-1-4-1">
+<p>
+A value normalizer function that signals an error if a <code>null</code>
+value is submitted.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-1-5" class="outline-4">
+<h4 id="sec-4-1-5"><span class="section-number-4">4.1.5</span> <i>Function</i> extract-schema</h4>
+<div class="outline-text-4" id="text-4-1-5">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-1-5-1">
+<p>
+Returns a subset of the table's column schemas as a list of slot
+definitions.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-1-6" class="outline-4">
+<h4 id="sec-4-1-6"><span class="section-number-4">4.1.6</span> <i>Function</i> schema</h4>
+<div class="outline-text-4" id="text-4-1-6">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-1-6-1">
+<p>
+Returns the table's schema as a list of slot definitions.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-1-7" class="outline-4">
+<h4 id="sec-4-1-7"><span class="section-number-4">4.1.7</span> <i>Generic Function</i> update-instance-for-redefined-table</h4>
+<div class="outline-text-4" id="text-4-1-7">
+<p>
+Not specified yet
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Table queries</h3>
+<div class="outline-text-3" id="text-4-2">
+</div><div id="outline-container-sec-4-2-1" class="outline-4">
+<h4 id="sec-4-2-1"><span class="section-number-4">4.2.1</span> <i>Function</i> <b>in</b></h4>
+<div class="outline-text-4" id="text-4-2-1">
+</div><ol class="org-ol"><li>Note:<br  /><div class="outline-text-5" id="text-4-2-1-1">
+<p>
+Modeled after the specifications in Ch. 27 of PCL
+</p>
+</div>
+</li>
+<li>Syntax<br  /><div class="outline-text-5" id="text-4-2-1-2">
+<p>
+<b>in</b> column-name table → function
+</p>
+</div>
+</li>
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-2-1-3">
+<dl class="org-dl">
+<dt> column-name </dt><dd>a symbol
+</dd>
+<dt> table </dt><dd>a square table
+</dd>
+<dt> function </dt><dd>Function of one argument, a table row.  It returns
+true if the column value in a set of values stored
+in the table under that same name
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-2-1-4">
+<p>
+PCL27:
+</p>
+<blockquote>
+<p>
+Returns a function that matches rows where a particular column is
+in a given set of values.
+</p>
+</blockquote>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-2-2" class="outline-4">
+<h4 id="sec-4-2-2"><span class="section-number-4">4.2.2</span> <i>Function</i> <b>select</b></h4>
+<div class="outline-text-4" id="text-4-2-2">
+</div><ol class="org-ol"><li>Note:<br  /><div class="outline-text-5" id="text-4-2-2-1">
+<p>
+Modeled after the specifications in Ch. 27 of PCL
+</p>
+</div>
+</li>
+<li>Syntax<br  /><div class="outline-text-5" id="text-4-2-2-2">
+<p>
+<b>select</b> table &amp;key (columns t) where distinct ordered from-end → new-table
+</p>
+</div>
+</li>
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-2-2-3">
+<dl class="org-dl">
+<dt> table </dt><dd>a square table
+</dd>
+<dt> columns </dt><dd><code>t</code> or a list of column names that will be transferred
+to the <i>new-table</i>
+</dd>
+<dt> where </dt><dd>a function that accepts a row as an argument and
+returns true if it should be accepted in the new table
+</dd>
+<dt> distinct </dt><dd>if <code>t</code>, eliminate duplicate rows from the result
+by testing all columns for equality.  If a list,
+test only specified columns.  See below for
+detailed explanation.
+</dd>
+<dt> ordered </dt><dd>if <code>t</code> sort using sorting specifications of all
+columns.  Else a list that specifies columns used
+for sorting.  See below for detailed explanation.
+</dd>
+<dt> from-end </dt><dd>Perform the row search or sorting from the table
+end
+</dd>
+<dt> new-table </dt><dd>A new table
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-2-2-4">
+<p>
+Returns a sub-range of a table.  The table contents are based on
+<i>columns</i>, <i>where</i>, <i>distinct</i>, and <i>from-end</i>.  The ordering of
+the table is based on <i>columns</i>, <i>order-by</i>, and <i>from-end</i>.
+</p>
+
+<dl class="org-dl">
+<dt> columns </dt><dd>If <code>t</code>, all columns are transferred.  Otherwise only
+listed columns are transferred
+</dd>
+</dl>
+
+
+<p>
+Row sorting is done by using the column comparator and equality
+predicates.  If multiple columns are used for comparison, row
+comparison is done by considering columns left-to-right (this
+ordering can be overridden), using the latter columns to break
+ties from comparisons of earlier columns.  If the final test is
+<code>equal</code>, the first row is accepted.
+</p>
+</div>
+
+<ol class="org-ol"><li>Specifying tests for <code>:distinct</code> and <code>:ordered</code> keywords<br  /><div class="outline-text-6" id="text-4-2-2-4-1">
+<p>
+The argument for those two keyword can be <code>t</code>, in which case,
+the rows are compared based on contents of all columns using
+comparators in the table schema.
+</p>
+
+<p>
+If a list of column names is provided, then the comparison is
+done with only the contents of those columns.
+</p>
+
+<p>
+One can specify custom equality and comparison predicates for
+the search, overriding the default specified in the table
+schema.  This specified with a simplified with a limited lambda
+list of the form
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(column-name :comparator comparator-function
+	     :equality-predicate equality-predicate-function)
+</pre>
+</div>
+<p>
+<code>comparator-function</code> and <code>equality-predicate-function</code> are
+functions of two arguments that return a generalized boolean.
+</p>
+
+<p>
+To illustrate:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(select table :ordered t) ;; sort using all columns and default comparators
+(select table :ordered 'column-a) ;; sort based on contents of column-a
+(select table :ordered '(column-a column-d)) ;; sort based on column-a, use column-d for tie-breakers
+(select table :ordered '((column-f #'string&gt;)) ;; sort using #'string&gt; on column-f
+(select table :ordered (list (list column-a (lambda (x y)
+					      (&gt; (abs x)
+						 (sin y))))
+			     (list column-f #'string&gt;)))
+</pre>
+</div>
+</div>
+</li></ol>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-2-3" class="outline-4">
+<h4 id="sec-4-2-3"><span class="section-number-4">4.2.3</span> <i>Function</i> matching</h4>
+<div class="outline-text-4" id="text-4-2-3">
+</div><ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-2-3-1">
+<p>
+<b>matching</b> table &amp;rest names-and-value-tests → row-matching-function
+</p>
+</div>
+</li>
+
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-2-3-2">
+<dl class="org-dl">
+<dt> table </dt><dd>a square table
+</dd>
+<dt> names-and-values </dt><dd>list of name value-test pairs
+</dd>
+<dt> row-matching-function </dt><dd>a function of one argument, a table
+row accessor
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-2-3-3">
+<p>
+Returns a function that matches rows with specific column values.
+<i>name-and-value-tests</i> is a list of <i>name-and-value-test</i> pairs.
+Each pair is a two element list.  The first element is a column
+name.  The second element is either a value or a function of one
+argument.
+</p>
+
+<p>
+The normalized value is compared using the column comparator
+against the column value of each row.  The function is called
+on the column value.  The function returns a generalized boolean
+which is used to determine whether the row satisfies the matching
+test.
+</p>
+
+<p>
+The name-and-value-tests are executed until the first pair fails,
+when the matching operation fails.
+</p>
+</div>
+</li></ol>
+</div>
+</div>
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Table operations</h3>
+<div class="outline-text-3" id="text-4-3">
+</div><div id="outline-container-sec-4-3-1" class="outline-4">
+<h4 id="sec-4-3-1"><span class="section-number-4">4.3.1</span> <i>Function</i> delete-all-rows</h4>
+<div class="outline-text-4" id="text-4-3-1">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-3-1-1">
+<p>
+Delete all table rows
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-3-2" class="outline-4">
+<h4 id="sec-4-3-2"><span class="section-number-4">4.3.2</span> <i>Function</i> delete-rows</h4>
+<div class="outline-text-4" id="text-4-3-2">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-3-2-1">
+<p>
+Delete rows that match a particular criteria
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-3-3" class="outline-4">
+<h4 id="sec-4-3-3"><span class="section-number-4">4.3.3</span> <i>Function</i> insert-row</h4>
+<div class="outline-text-4" id="text-4-3-3">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-3-3-1">
+<p>
+Insert data into the next table row
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-3-4" class="outline-4">
+<h4 id="sec-4-3-4"><span class="section-number-4">4.3.4</span> <i>Function-maybe</i> column</h4>
+<div class="outline-text-4" id="text-4-3-4">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-3-4-1">
+<p>
+Low level set-efable function that access the table column.  It
+bypasses sequence type checking.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-3-5" class="outline-4">
+<h4 id="sec-4-3-5"><span class="section-number-4">4.3.5</span> <i>Function</i> column-value</h4>
+<div class="outline-text-4" id="text-4-3-5">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-3-5-1">
+<p>
+Low-level function set-efable  access to a cell value in a column.
+This function bypasses all type and value checking and
+normalization.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-3-6" class="outline-4">
+<h4 id="sec-4-3-6"><span class="section-number-4">4.3.6</span> <i>Function</i> sorted-rows</h4>
+<div class="outline-text-4" id="text-4-3-6">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-3-6-1">
+<p>
+Sorts rows according to sorting criteria for the specified
+column names
+</p>
+</div>
+</li></ol>
+</div>
+</div>
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Access to table elements</h3>
+<div class="outline-text-3" id="text-4-4">
+</div><div id="outline-container-sec-4-4-1" class="outline-4">
+<h4 id="sec-4-4-1"><a id="0wqhhju04gg0" name="0wqhhju04gg0"></a><span class="section-number-4">4.4.1</span> <i>Function</i> <b>advance-row</b></h4>
+<div class="outline-text-4" id="text-4-4-1">
+</div>
+
+<ol class="org-ol"><li>Calling convention<br  /><div class="outline-text-5" id="text-4-4-1-1">
+<p>
+<b>advance-row</b> row &amp;optional index eot-error-p eot-value → row
+</p>
+</div>
+</li>
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-4-1-2">
+<dl class="org-dl">
+<dt> row </dt><dd>a row accessor.
+</dd>
+<dt> index </dt><dd>a positive integer.  The default is 1.
+</dd>
+<dt> eot-error-p </dt><dd>a generalized boolean.  The default is true.
+</dd>
+<dt> eot-value </dt><dd>an object.  The default is nil
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-1-3">
+<p>
+Increments row-index by the value of <i>index</i>.  If it tries to
+advance beyond the last row, it acts according to <i>eot-error-p</i>.
+</p>
+</div>
+</li>
+<li>Exceptional Situations<br  /><div class="outline-text-5" id="text-4-4-1-4">
+<p>
+If <i>eof-table-p</i> is true, <b>end-of-table</b> is signaled at the end
+of the table.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-2" class="outline-4">
+<h4 id="sec-4-4-2"><span class="section-number-4">4.4.2</span> <i>Function</i> <code>cell-value</code></h4>
+<div class="outline-text-4" id="text-4-4-2">
+<p>
+<b>Note</b> function <code>cell-value</code> has been replaced by the generic
+ function <code>value</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4-3" class="outline-4">
+<h4 id="sec-4-4-3"><span class="section-number-4">4.4.3</span> <i>Function</i> <code>column-values</code></h4>
+<div class="outline-text-4" id="text-4-4-3">
+</div><ol class="org-ol"><li>Note<br  /><div class="outline-text-5" id="text-4-4-3-1">
+<p>
+Should I use a single generic function to access table values
+using either a table or a row accessor.
+</p>
+</div>
+</li>
+<li>Syntax:<br  /><div class="outline-text-5" id="text-4-4-3-2">
+<p>
+<i>column-values</i> table column-selector → <i>sequence</i>
+</p>
+</div>
+</li>
+<li>Arguments and Values:<br  /><div class="outline-text-5" id="text-4-4-3-3">
+<dl class="org-dl">
+<dt> table </dt><dd>a table
+</dd>
+<dt> column-selector </dt><dd>Column name or index
+</dd>
+<dt> sequence </dt><dd>A valid CL sequence
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-3-4">
+<p>
+Returns a sequence of values stored in a column.  The sequence type
+is determined by <code>*raw-container-type*</code>
+</p>
+
+<p>
+If the selector fails to find a match, the correctable error
+<code>nonexistent-column</code> is thrown.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-4" class="outline-4">
+<h4 id="sec-4-4-4"><span class="section-number-4">4.4.4</span> <i>Macro</i> <b>do-rows</b></h4>
+<div class="outline-text-4" id="text-4-4-4">
+</div><ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-4-4-1">
+<p>
+<b>do-rows</b> (var table [result-form]) declaration* statement
+</p>
+</div>
+</li>
+
+<li>Arguments and Values:<br  /><div class="outline-text-5" id="text-4-4-4-2">
+<dl class="org-dl">
+<dt> var </dt><dd>a symbol
+</dd>
+<dt> table </dt><dd>a form that evaluates to a table
+</dd>
+<dt> result-form </dt><dd>if a <i>return</i> or <i>return-from</i> form is executed,
+the values passed from that form; otherwise, the
+values returned by the <i>result-form</i> or nil if
+there is no result-form.
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-4-3">
+<p>
+iterate over rows of the table.  <i>var</i> accesses a successive
+table rows.  
+</p>
+
+<p>
+For file-based read-only tables, the loop terminates at end of
+file.  For file-based write-only tables, the macro actions are
+unspecified.
+</p>
+
+<p>
+For all other tables, the loop terminates when the end of the
+table is reached.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-5" class="outline-4">
+<h4 id="sec-4-4-5"><span class="section-number-4">4.4.5</span> <i>Macro</i> <b>do-rows*</b></h4>
+<div class="outline-text-4" id="text-4-4-5">
+</div><ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-4-5-1">
+<p>
+<b>do-rows*</b> ((&amp;rest var-table-pairs) [result-form]) declaration* statement
+</p>
+</div>
+</li>
+
+<li>Arguments and Values:<br  /><div class="outline-text-5" id="text-4-4-5-2">
+<dl class="org-dl">
+<dt> var-table-pairs </dt><dd>a pair of a row (a symbol) and a form that
+evaluates to a table
+</dd>
+<dt> result-form </dt><dd>if a <i>return</i> or <i>return-from</i> form is executed,
+the values passed from that form; otherwise, the
+values returned by the <i>result-form</i> or nil if
+there is no result-form.
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-5-3">
+<p>
+Iterate in parallel over rows of multiple tables.  <i>var</i> accesses
+a successive table rows.
+</p>
+
+<p>
+A var-table pair is a two-element list.
+</p>
+
+<p>
+For file-based read-only tables, the loop terminates at end of
+file.  For file-based write-only tables, the macro actions are
+unspecified.
+</p>
+
+<p>
+For all other tables, the loop terminates when the end of the
+table is reached.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-6" class="outline-4">
+<h4 id="sec-4-4-6"><span class="section-number-4">4.4.6</span> <i>Condition</i> <b>end-of-table</b></h4>
+<div class="outline-text-4" id="text-4-4-6">
+<p>
+Raised when trying to access a row beyond the end of a table
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4-7" class="outline-4">
+<h4 id="sec-4-4-7"><span class="section-number-4">4.4.7</span> <i>Function</i> nth-row</h4>
+<div class="outline-text-4" id="text-4-4-7">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-4-7-1">
+<p>
+Low level function that returns the nth-row accessor object.
+Rows will ideally be accessed with the 
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-8" class="outline-4">
+<h4 id="sec-4-4-8"><span class="section-number-4">4.4.8</span> <i>Macro</i> map-rows</h4>
+</div>
+<div id="outline-container-sec-4-4-9" class="outline-4">
+<h4 id="sec-4-4-9"><span class="section-number-4">4.4.9</span> <i>Condition</i> <code>nonexistent-row</code></h4>
+<div class="outline-text-4" id="text-4-4-9">
+<p>
+Raised when applying a row-selector to a table returns nil
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4-10" class="outline-4">
+<h4 id="sec-4-4-10"><span class="section-number-4">4.4.10</span> <i>Condition</i> <code>nonexistent-column</code></h4>
+<div class="outline-text-4" id="text-4-4-10">
+<p>
+Raised when applying a column-selector to a table returns nil
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4-11" class="outline-4">
+<h4 id="sec-4-4-11"><span class="section-number-4">4.4.11</span> <i>Function</i> <b>row-index</b></h4>
+<div class="outline-text-4" id="text-4-4-11">
+</div><ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-4-11-1">
+<p>
+<b>row-index</b> row → index
+</p>
+
+<p>
+(<code>setf</code> (<b>row-index</b> row) index)
+</p>
+</div>
+</li>
+
+<li>Arguments and Values:<br  /><div class="outline-text-5" id="text-4-4-11-2">
+<dl class="org-dl">
+<dt> row </dt><dd>a row accessor
+</dd>
+<dt> index </dt><dd>an integer
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-11-3">
+<p>
+Access table row specified by <i>index</i>.  Being setf-able, it
+supports <code>incf</code>, <code>decf</code>.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-4-12" class="outline-4">
+<h4 id="sec-4-4-12"><span class="section-number-4">4.4.12</span> <i>Function</i> <code>row-values</code></h4>
+<div class="outline-text-4" id="text-4-4-12">
+</div><ol class="org-ol"><li>Calling convention<br  /><div class="outline-text-5" id="text-4-4-12-1">
+<p>
+<i>row-values</i> table row-selector → <i>sequence</i>
+</p>
+
+<dl class="org-dl">
+<dt> table </dt><dd>a table
+</dd>
+<dt> row-selector </dt><dd>row-selector - either a row index or a function
+that when applied to a table row returns a
+generalized boolean
+</dd>
+<dt> sequence </dt><dd>A valid CL sequence
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-12-2">
+<p>
+Returns a sequence of values stored in a row.  The sequence type
+is determined by <code>*raw-container-type*</code>.
+</p>
+
+<p>
+If the selector fails to find a match, the correctable error
+<code>non-existent-row</code> is thrown.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-13" class="outline-4">
+<h4 id="sec-4-4-13"><span class="section-number-4">4.4.13</span> <i>Function</i> <code>table-row</code></h4>
+<div class="outline-text-4" id="text-4-4-13">
+</div><ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-4-13-1">
+<p>
+<b>table-row</b> table row-selector → row-accessor
+</p>
+</div>
+</li>
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-4-13-2">
+<dl class="org-dl">
+<dt> table </dt><dd>a square table
+</dd>
+<dt> row-selector </dt><dd>a function that returns a generalized boolean
+when applied to table rows
+</dd>
+<dt> row-accessor </dt><dd>an object whose methods access row values
+</dd>
+</dl>
+</div>
+</li>
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-13-3">
+<p>
+Returns row accessor object pointing to the first table row that
+matches the criteria of the row-selector.
+</p>
+
+<p>
+If the selector fails to find a match, the correctable error
+<code>non-existent-row</code> is thrown.
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-4-14" class="outline-4">
+<h4 id="sec-4-4-14"><span class="section-number-4">4.4.14</span> <i>Function</i> <code>table-value</code></h4>
+<div class="outline-text-4" id="text-4-4-14">
+</div><ol class="org-ol"><li>Syntax:<br  /><div class="outline-text-5" id="text-4-4-14-1">
+<p>
+<b>table-value</b> table row-selector column-selector → value
+</p>
+
+<p>
+<b>Note:</b> <code>table-value</code> has been superseded by <code>value</code>
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-15" class="outline-4">
+<h4 id="sec-4-4-15"><span class="section-number-4">4.4.15</span> <i>Generic Function</i> <b>value</b></h4>
+<div class="outline-text-4" id="text-4-4-15">
+</div><ol class="org-ol"><li>Syntax<br  /><div class="outline-text-5" id="text-4-4-15-1">
+<p>
+<b>value</b> container column-name &amp;optional row-selector -&gt; value
+</p>
+
+<p>
+(setf (<b>value</b> container column-name &amp;optional row-selector)
+value)
+</p>
+</div>
+</li>
+<li>Arguments and values<br  /><div class="outline-text-5" id="text-4-4-15-2">
+<dl class="org-dl">
+<dt> container </dt><dd>a table or a table row accessor
+</dd>
+<dt> column-name </dt><dd>a symbol
+</dd>
+<dt> row-selector </dt><dd>a function of one argument, a row accessor
+</dd>
+<dt> value </dt><dd>a value stored in a table cell
+</dd>
+</dl>
+</div>
+</li>
+
+<li>Description<br  /><div class="outline-text-5" id="text-4-4-15-3">
+<p>
+The function used to access values in a table.  If <i>container</i> is
+a table, it accesses the column value of the first row that
+satisfies the row-selector.
+</p>
+
+<p>
+If <i>container</i> is a row-accessor, it accesses that row's value.
+</p>
+
+<p>
+Setting the value to <code>+null+</code> sets the value to empty.
+</p>
+
+<p>
+Throws correctable errors <code>nonexistent-row</code> or
+<code>nonexistent-column</code> if a selector fails to find a match.  The
+order in which the selectors are applied is unspecified.
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-4-16" class="outline-4">
+<h4 id="sec-4-4-16"><span class="section-number-4">4.4.16</span> <i>Macro</i> <code>with-columns</code></h4>
+<div class="outline-text-4" id="text-4-4-16">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-4-16-1">
+<p>
+Binds variables to column vectors.
+</p>
+</div>
+</li>
+<li>Note<br  /><div class="outline-text-5" id="text-4-4-16-2">
+<p>
+This macro's behavior is undefined if the table uses a matrix for
+internal storage
+</p>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-4-4-17" class="outline-4">
+<h4 id="sec-4-4-17"><span class="section-number-4">4.4.17</span> <i>Macro</i> <code>with-column-values</code></h4>
+<div class="outline-text-4" id="text-4-4-17">
+</div><ol class="org-ol"><li>Descritpion<br  /><div class="outline-text-5" id="text-4-4-17-1">
+<p>
+Binds variables to row values
+</p>
+</div>
+</li></ol>
+</div>
+</div>
+<div id="outline-container-sec-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> Other operations</h3>
+<div class="outline-text-3" id="text-4-5">
+</div><div id="outline-container-sec-4-5-1" class="outline-4">
+<h4 id="sec-4-5-1"><span class="section-number-4">4.5.1</span> <i>Function</i> load-table</h4>
+<div class="outline-text-4" id="text-4-5-1">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-5-1-1">
+<p>
+load table from stream
+</p>
+</div>
+</li></ol>
+</div>
+
+<div id="outline-container-sec-4-5-2" class="outline-4">
+<h4 id="sec-4-5-2"><span class="section-number-4">4.5.2</span> <i>Function</i> table</h4>
+</div>
+<div id="outline-container-sec-4-5-3" class="outline-4">
+<h4 id="sec-4-5-3"><span class="section-number-4">4.5.3</span> <i>Function</i> table-size</h4>
+<div class="outline-text-4" id="text-4-5-3">
+</div><ol class="org-ol"><li>Description<br  /><div class="outline-text-5" id="text-4-5-3-1">
+<p>
+Return the number of rows and columns as a two-element list.
+</p>
+</div>
+</li></ol>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+This requirements imposes some restrictions on table
+definition, and types of data that can be stored in the table.
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+The syntax can be easily simplified with syntactic functions,
+macros, or reader macros.  This is not discussed in this document.
+</p></div>
+
+<div class="footdef"><sup><a id="fn.3" name="fn.3" class="footnum" href="#fnr.3">3</a></sup> <p class="footpara">
+We support user-defined lisp readers, provided the appropriate
+package is active - this responsibility is delegated to the user for now
+</p></div>
+
+<div class="footdef"><sup><a id="fn.4" name="fn.4" class="footnum" href="#fnr.4">4</a></sup> <p class="footpara">
+Column storage type matters only for column read/write access.
+</p></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Mirko Vukovic</p>
+<p class="date">Created: 2014-05-27 Tue 14:10</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.5)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

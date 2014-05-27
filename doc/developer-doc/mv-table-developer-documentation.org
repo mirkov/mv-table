@@ -1,5 +1,54 @@
 #+title: Developer documentation
 
+* Data storage
+
+  By default column tables are stored in table class slots - one slot
+  per vector.  Extensions are allowed to store tables as
+  - sequence of vectors
+    - a vector of vectors
+    - a structure of vectors
+  - a single vector
+  - a matrix
+    
+    
+  Each of these has impact on table growth and type checking
+
+  The table storage options, by table type are
+  |              | N | VxV | SxV | V | M |
+  |--------------+---+-----+-----+---+---|
+  | Column table | \check | \check   | \check   | \check |   |
+  |--------------+---+-----+-----+---+---|
+  | Square table | \check | \check   | \check   | \check | \check |
+  | Matrix table |   | \check   |     | \check | \check |
+
+
+  
+  A table can add rows on the storage options (\star is for square tables
+  where all columns have equal length):
+  |     | + Row |
+  |-----+-------|
+  | N   | \check     |
+  | VxV | \check\star    |
+  | SxV | \check\star    |
+  | V   |       |
+  | M   |       |
+
+  Columns are added by redefining a table, much as a class can be
+  redefined by recompiling =defclass=.  All table storage types can
+  add columns.
+
+  Column type checking depends on the table type.  Matrix table store
+  the same data type in all the cells.
+  | Type   | Checking? |
+  |--------+-----------|
+  | Column | \check         |
+  | Square | \check         |
+  | Matrix | \times         |
+
+  Efficient type works only for V\times{}V and S\times{}V storage types.
+  Internally, the vectors are defined to store values of a specified
+  type, which can lead to storage and access optimization by the CL.
+  
 * CLOS & MOP implementation of tables as classes
 
   mv-tables are defined in terms of several metaobject (MO) classes
@@ -14,6 +63,7 @@
   - storage virtual MO class and its specialized MO classes
     - columns
     - matrix
+    - vector
     - file
     - external
       - various db-access MO classes

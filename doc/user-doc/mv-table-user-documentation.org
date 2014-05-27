@@ -1,6 +1,240 @@
 #+title: ~mv-table~ user documentation
+   
+
+* mv-table
+** Introduction
+   =mv-table= is a CLOS inspired data structure for storing and
+   manipulating columns of data.  It supports several types of
+   organization, in-memory storage, access, and operations.  It also
+   supports reading to and writing from disk [fn:3].
+
+   Being based on CLOS (and implemented using MOP), table definitions
+   support inheritance and on-the-fly redefinition upon re-evaluation
+   of the =deftable= form.
+
+   =mv-table= can store, save and read most of CL's native types.  It
+   can also store references to external data objects, such as images
+   or documents that reside on disk.
+   
+** Table types
+   :PROPERTIES:
+   :ID:       wu17np515gg0
+   :END:
+
+   mv-table supports several table types:
+   - column tables :: tables of columns of possibly unequal length.
+                      Access to table elements is via columns names
+                      and index of the entry in the column
+   - square tables :: tables of columns of equal length.  Access to
+                      table elements is either via columns names and
+                      row index or rows selection rules (subject to
+                      some restrictions discussed below) and column
+                      name.
+		      
+		      Square tables are a specialization of column
+                      tables.  They support all operations as column
+                      tables and add additional ones.
+   - matrix tables :: Store matrices of data of the same type.  The
+                      primary mean of reference is by row and column
+                      index
+		      
 
 
+   Tables are further defined by access type:
+   - Random access :: The data is in memory or on disk
+                      using a database
+   - Sequential :: This type is primarily reserved for tables residing
+                   on disk.  The two primary operations on these
+                   tables are row-wise reading or writing.
+		   
+		   Column tables are accessed column by column, while
+                   square and matrix tables row by row.
+
+
+   Data storage is implemented in several ways:
+   - In memory as a collection of native or foreign vectors, or as a
+     native or foreign matrix, or as a single native vector.
+   - Disk files, such as CSV
+   - External, using external applications (such as databases)
+     
+   Memory resident square tables with columns stored as vectors the
+   most common and default.  Keys during initialization and slot or
+   table  options are used to override the defaults.
+   
+** Table definition and initialization
+   :PROPERTIES:
+   :ID:       84qh5om04ag0
+   :END:
+
+   Tables are defined using the =deftable= macro and instantiated
+   using the =make-instance= function.  The table definition and
+   instantiation syntax is based on CLOS' =defclass= and
+   =make-instance=[fn:1].  Under the hood, tables are implemented
+   using MOP's extension to CLOS.
+
+   Tables are defined using the =deftable= macro (similar to
+   =defclass=).  The columns (slots) definitions define the table
+   schema.  Tables are instantiated with the =make-table= function.
+
+** File based tables
+   :PROPERTIES:
+   :ID:       cvj8u6002gg0
+   :END:
+
+    Files of column data (such as CSV) can be considered as tables.
+    =mv-tables= can be access such files using its native syntax.
+
+    File based tables are specified by setting the =:organization=
+    table option to =:file=.  This implies sequential access.  The
+    user has access to only a single row/column of a square or
+    matrix/columns table.
+
+    For square or matrix tables, these tables are accessed row by row,
+    starting from the first row.  For column tables, they are accessed
+    column by column.
+
+    When the =:action= option is =:read-only=, the =:insert-row=
+    operation reads a record from the file and places it in the
+    =current-row= row-accessor for square or matrix tables.
+    =:insert-column= will read the contents of the next record into
+    the =current-column= column accessor for column tables.  As an
+    example:
+    #+BEGIN_SRC lisp
+      (insert-row table stream)
+    #+END_SRC
+
+    When the =:action= option is =:write-only=, the =:insert-row= will
+    create a new record in the file.
+
+    This format is used mainly for table i/o.  A temporary sequential
+    read-only table is created.  Repeated calls to =insert-row= read
+    its contents which are available via the row-accessor.  These
+    contents can then be added to an in-memory table.  Using the
+    =do-rows= macro this is done as follows:
+    #+BEGIN_SRC lisp
+          (do-rows (read-only-row read-only-table)
+            (insert-row in-memory-table
+                        (row-contents read-only-row)))
+    #+END_SRC
+
+
+** Built-in column-types
+
+   To facilitate saving and reading in of tables from disk, we place
+   restrictions on types of values that can be stored in tables.  We
+   store only values that can be read in by the lisp reader[fn:4] and
+   to which we can apply equality and comparison tests.
+
+   Table columns can store all CL types that can be handled by the
+   lisp reader.  We list them
+   - symbols (including t, nil, and keyword symbols)
+   - number and its sub-types
+   - characters
+   - string and its sub-types
+   - sequences
+     - vectors and arrays
+     - lists
+     - foreign vectors and arrays
+   - lambda forms
+     
+     
+   The following table lists the default comparators, and unbound
+   values.  Unspecified entries have to be defined by the user in the
+   column schema.
+   
+   | Type      | Equality    | Comparator  | Null        |
+   |-----------+-------------+-------------+-------------|
+   | Symbol    | #'eq        | #'string>   | unspecified |
+   | Number    | #'=         | #'>         | nil         |
+   | Character | #'char=     | #'char>     | nil         |
+   | String    | #'string=   | #'string>   | nil         |
+   | Vector    | unspecified | unspecified | nil         |
+   | Array     | unspecified | unspecified | nil         |
+   | List      | unspecified | unspecified | unspecified |
+   | λ form    | unspecified | unspecified | null        |
+   
+
+*** Note 1
+    Storage of vectors and arrays can be modified using the
+    =value-normalizer= function.  The input sequence can be converted
+    to a more efficient sequence by that function.  This guarantees
+    that the sequence will be stored in the same manner after it is
+    read in from the table.
+
+*** Note 2
+    Lambda forms are evaluated in the following environment:
+    - Table meta-data is available in a lexical environment shared by
+      all the lambda forms of that column.  Consequences are
+      unspecified if a lambda-form modifies a table meta-data value -
+      although it is our intent to provide for that functionality
+    - Each lambda form has access to all the row values via the
+      row-accessor for that row.  This means that the lambda form can
+      read and set values of other cells in the same row.  The reading
+      and setting is done via the reader & writer methods, which
+      includes all the checking and normalization procedures.
+* Table types
+  There are two types of tables:
+  - column :: columns of unequal length
+  - square :: columns of equal length
+    
+    
+  The ~column~ table is the most primitive kind of table.  Their
+  properties are compared here:
+  | Property          | Column | Square |
+  |-------------------+---------+--------|
+  | Column accessor   | yes     | yes    |
+  | min, max length   | yes     | yes    |
+  | Loop over columns | yes     | yes    |
+  | Length            | no      | yes    |
+  | Element accessor  | no      | yes    |
+  | Row selector      | no      | yes    |
+  | Loop over rows    | no      | yes    |
+
+  Note that the column tables do not have a row count, only minimum
+  and maximum row count
+** Table states
+   When instantiated, the table is in the empty state.  From there,
+   things can go in several directions
+
+*** States of column tables
+    - empty
+    - to be done
+    
+    #+BEGIN_SRC lisp
+      (defmethod (setf table-column) (vector (table curtain) column-name vector)
+	(when (min-row-count-specified-p table)
+	  (if (geq (length vector) (min-row-count table))
+		(setf min-test t)
+		(error 'vector-too-short)))
+	(when (max-row-count-specified-p table)
+	  (if (leq (length vector) (max-row-count table))
+	      (setf max-test t)
+	      (error 'vector-too-long)))
+	(setf (slot-value table column-name) vector
+	      (min-row-count table) (min (length vector)
+					 (min-row-count table))
+	      (max-row-count table) (max (length vector)
+					 (max-row-count table))))
+    #+END_SRC
+
+*** States of square tables
+
+  Table contents are accessed by 
+  
+** Table meta-data
+
+   A =def-table= can contain an arbitrary number of meta-data table
+   options other than the predefined ones.
+
+   Table meta-data is accessed using the accessor by the same name as
+   the meta-data options.
+
+   Meta-data is defined and initialized prior to column
+   initialization.
+
+   It is set using the make-table method using keyword arguments.
+   This data is available to the =initialize-instance= =:after= method
+   to initialize column values.
 * mv-table by example
 
 ** Building tables
@@ -200,19 +434,14 @@
 
     We can use initforms and initargs to build a table of sines
     #+BEGIN_SRC lisp
-      (deftable sin-table ()
-       	((x :storage array
-	    :element-type 'float
-	    :initarg :x)
-	 (y :storage array
-	    :element-type 'float))
-       	(:documentation "Table of the sin function")
-       	(:default-initargs
-	    :x (range 0 pi 21)))
-      
-      (defmethod initialize-instance :after ((table sin-table))
-       	(dorows (row table)
-	  (setf (y row) (sin (x row)))))
+            (deftable sin-table ()
+              ((x :storage array
+                  :element-type 'float
+                  :initform '(range 0 pi 21))
+               (y :storage array
+                  :element-type 'float
+                  :initform '(sin x)))
+              (:documentation "Table of the sin function"))
     #+END_SRC
     The x column can be initialized either via make-table or using
     the :default-initargs definition in =deftable=
@@ -256,28 +485,35 @@
     columns A and B from tables t1 and t2 respectively.
 
 
-    A final example of a table initialization involves external
-    argument.  Consider defining a table that will compute the
-    calendar for a month.
+    A final example of a table initialization involves table
+    meta-data.  We define a table that will compute the calendar for a
+    month.  The year and month are stored as the :meta-data table
+    options.  Their values are available in the =initialize-instance=
+    =:after= method.
     #+BEGIN_SRC lisp
       (deftable calendar ()
-       	(day)
-       	(day-of-week))
+        ((day)
+         (day-of-week))
+        (:meta-data
+         :year
+         :month))
       
-      (defmethod initialize-instance :after ((self calendar) &key year month
-							       &allow-other-keys)
-       	(let* ((days-of-month (days-of-month year month))
-	       (days-of-week (mapcar (lambda (day)
-				      (day-of-week year month day))
-				    days-of-month)))
-	  (setf (column self 'day) days-of-month
-	       	(column self 'day-of-week) days-of-week)))
+      (defmethod initialize-instance :after ((self calendar) &key
+                                             &allow-other-keys)
+        (let* ((days-of-month (days-of-month (year self) (month self)))
+               (days-of-week (mapcar (lambda (day)
+                                       (day-of-week (year self) (month self)
+                                                    day))
+                                     days-of-month)))
+          (setf (column self 'day) days-of-month
+                (column self 'day-of-week) days-of-week)))
     #+END_SRC
-    Now, we can generate a yearly calendar
+    Now, we can generate a yearly calendar.  The meta-data slots are
+    available as keyword arguments to =make-table=
     #+BEGIN_SRC lisp
       (setf *calendar*
 	    (mapcar (lambda (month)
-		      (make-instance 'calendar :year 2013 :month month))
+		      (make-table 'calendar :year 2013 :month month))
 		    '(0 1 2 3 4 5 6 7 8 9 10 11)))
     #+END_SRC
     And we can query what day of the week is on September 30th:
@@ -325,10 +561,10 @@
     variable  =*raw-container-type*= signals type of container when
     retrieving the values.
 
-    =cell-value= gives access to a cell value.
+    =value= gives access to a cell value.
 
     These methods perform no checking or conversion as specified in
-    the table schema.
+    the table schema.  
 
     Unlike the higher level methods, column/row values can be accessed
     by the column/row index.
@@ -340,14 +576,15 @@
     setting triggers all the type and value checking specifications of
     the table schema.
 
-    
-
+    Both column and row accessors support the =export= generic
+    function.  It will return a sequence of values in the specified
+    format (list, vector, or structure for rows).
 
 **** Row accessor
-     The function =select-row= returns the first row that satisfies the
-     /predicate function/
+     The function =select-row= returns the row accessor for the first
+     row that satisfies the /predicate function/
      #+BEGIN_SRC lisp
-           (setf *row-accessor* (select-row table predicate-function))
+           (setf row-accessor (select-row table predicate-function))
      #+END_SRC
      The /predicate function/ tests the row against it contents or its
      index, or both.
@@ -365,47 +602,41 @@
      Export can be one of list, vector, structure (tagged with column
      names) or even foreign-vector (if the row data-type is
      appropriate).
-     
-*** Iterating over rows
-    For efficiency sake, if we need to traverse a table either by rows
-    we don't need to repeatedly create an accessor.  Instead we can
-    increment its index.  This is accomplished by two supporting
-    setf-able functions =row-index=.
+
+     Row-accessor supports the concept of a row index using the
+     =row-index= function.  This is a setf-able quantity, allowing us
+     to use a row-accessor to accesses any table row.
+
+**** Iterating over rows
+     Row iteration is done using the =do-rows= macro or modifying a
+     row-accessor's row-index.
+
 
 *** Column accessor
     A column is accessed using the column accessor defined in
-    =deftable=.  
+    =deftable= column schema.  This accessor returns the column
+    accessor object.  Thus for a table =calendar= with a =month=
+    column, the following returns =month='s column accessor
+    #+BEGIN_SRC lisp
+      (month calendar)
+    #+END_SRC
 
     Column data is accessed using the same generic function =value=
     and either the row index or a predicate function.  The predicate
     function will search the table for the matching row, and return
     that row's column value.
     #+BEGIN_SRC lisp
-          (value column-accessor row-index)
+          (value column-accessor row-matcher)
     #+END_SRC
+    =row-matcher= is either a row index or a function that returns
+    true on a table row.
 
-    Columns support the =export= generic function.
-
-    One cannot iterate over columns directly.  Instead, one can
-    collect the table's column names, and iterate over columns using
-    the names.
-    
-
-*** Table row accessors
-    A table row accessor is an object that access contents of a table
-    row.  To access a row element, we say
-    #+BEGIN_SRC lisp
-      (distance table-row)
-      (setf (comment table-row) "a comment")    
-    #+END_SRC
-
-    Table rows objects are created like this:
-    #+BEGIN_SRC lisp
-      (table-row table :where selector-function)
-    #+END_SRC
-    The ~selector-function~ is a function that returns true or false
-    for each row.  It's discussed in Ch. 27 of PCL.
-    
+**** Iterating over columns
+     The macro =do-columns= will iterate over columns.  The iteration
+     order is unspecified - it is unrelated to the order of columns in
+     the table schema.
+     
+     
 *** Table saving and loading
     Tables are serializable: they can be saved into a file and loaded
     in a later CL session.
@@ -414,8 +645,8 @@
       (load-table stream)
     #+END_SRC
 ** Selecting parts of a table
-   *Note*: This section is motivated by Chapter 27 of Practical
-   Common Lisp.
+   *Note*: We use SQL-like syntax for table queries.  This is
+   motivated by Chapter 27 of Practical Common Lisp.  
    
    From a table we can derive another table with a sub set of columns
    or rows.  This is done with the ~select~ command.  For example,
@@ -427,7 +658,7 @@
 	     :where (matching flight-xyz (= control-tower "JKF")))
    #+END_SRC
    
-** Deriving and combining tables, creating summaries
+** Generic functions and methods: Deriving and combining tables, creating summaries
    A table can be derived from values in one or more tables.  We can
    also obtain one or more summaries of a table.  This is done with
    functions and methods whose arguments are tables.
@@ -445,219 +676,18 @@
        columns is t (the default value), return maxima for all columns.
        If columns is nil, return nil"))
      #+END_SRC
-     Now, for 
+     Now we can define methods on various table types to provide this
+     functionality.
      
 *** Writing methods with tables
 
-*** Table types
-    There are two types of tables:
-    - column :: columns of unequal length
-    - square :: columns of equal length
-      
-      
-    The ~column~ table is the most primitive kind of table.  Their
-    properties are compared here:
-    | Property          | Column | Square |
-    |-------------------+---------+--------|
-    | Column accessor   | yes     | yes    |
-    | min, max length   | yes     | yes    |
-    | Loop over columns | yes     | yes    |
-    | Length            | no      | yes    |
-    | Element accessor  | no      | yes    |
-    | Row selector      | no      | yes    |
-    | Loop over rows    | no      | yes    |
+    To be done
 
-    Note that the column tables do not have a row count, only minimum
-    and maximum row count
-*** Table states
-    When instantiated, the table is in the empty state.  From there,
-    things can go in several directions
-
-**** States of column tables
-     - empty
-     - 
-     
-     #+BEGIN_SRC lisp
-       (defmethod (setf table-column) (vector (table curtain) column-name vector)
-         (when (min-row-count-specified-p table)
-           (if (geq (length vector) (min-row-count table))
-                 (setf min-test t)
-                 (error 'vector-too-short)))
-         (when (max-row-count-specified-p table)
-           (if (leq (length vector) (max-row-count table))
-               (setf max-test t)
-               (error 'vector-too-long)))
-         (setf (slot-value table column-name) vector
-               (min-row-count table) (min (length vector)
-                                          (min-row-count table))
-               (max-row-count table) (max (length vector)
-                                          (max-row-count table))))
-     #+END_SRC
-
-**** States of square tables
-
-   Table contents are accessed by 
-   
-   
-* mv-table
-** Introduction
-   =mv-table= is a CLOS inspired data structure for storing and
-   manipulating columns of data.  It supports several types of
-   organization, in-memory storage, access, and operations.  It also
-   supports reading to and writing from disk [fn:3].
-
-   Being based on CLOS (and implemented using MOP), table definitions
-   support inheritance and on-the-fly redefinition upon re-evaluation
-   of the =deftable= form.
-   
-** Table types
-   :PROPERTIES:
-   :ID:       wu17np515gg0
-   :END:
-
-   mv-table supports several table types:
-   - column tables :: tables of columns of possibly unequal length.
-                      Access to table elements is via columns names
-                      and index of the entry in the column
-   - square tables :: tables of columns of equal length.  Access to
-                      table elements is either via columns names and
-                      row index or rows selection rules (subject to
-                      some restrictions discussed below) and column
-                      name.
-		      
-		      Square tables are a specialization of column
-                      tables.  They support all operations as column
-                      tables and add additional ones.
-   - matrix tables :: Store matrices of data of the same type.  The
-                      primary mean of reference is by row and column
-                      index
-		      
-
-
-   Tables are further defined by access type:
-   - Random access :: The data is in memory or on disk
-                      using a database
-   - Sequential :: This type is primarily reserved for tables residing
-                   on disk.  The two primary operations on these
-                   tables are row-wise reading or writing.
-		   
-		   Column tables are accessed column by column, while
-                   square and matrix tables row by row.
-
-
-   Data storage is implemented in several ways:
-   - In memory as a collection of native or foreign vectors, or as a
-     native or foreign matrix
-   - Disk files, such as CSV
-   - External, using external applications (such as databases)
-     
-   Memory resident square tables with columns stored as vectors the
-   most common and default.  Keys during initialization and slot or
-   table  options are used to override the defaults.
-   
-** Table definition and initialization
-   :PROPERTIES:
-   :ID:       84qh5om04ag0
-   :END:
-
-   Tables are defined using the =deftable= macro and instantiated
-   using the =make-instance= function.  The table definition and
-   instantiation syntax is based on CLOS' =defclass= and
-   =make-instance=[fn:1].  Under the hood, tables are implemented
-   using MOP's extension to CLOS.
-
-   Tables are defined using the =deftable= macro (similar to
-   =defclass=).  The columns (slots) definitions define the table
-   schema.  Tables are instantiated with the =make-table= function.
-
-** File based tables
-   :PROPERTIES:
-   :ID:       cvj8u6002gg0
-   :END:
-
-    Files of column data (such as CSV) can be considered as tables.
-    =mv-tables= can be access such files using its native syntax.
-
-    File based tables are specified by setting the =:organization=
-    table option to =:file=.  This implies sequential access.  The
-    user has access to only a single row/column of a square or
-    matrix/columns table.
-
-    For square or matrix tables, these tables are accessed row by row,
-    starting from the first row.  For column tables, they are accessed
-    column by column.
-
-    When the =:action= option is =:read-only=, the =:insert-row=
-    operation reads a record from the file and places it in the
-    =current-row= row-accessor for square or matrix tables.
-    =:insert-column= will read the contents of the next record into
-    the =current-column= column accessor for column tables.  As an
-    example:
-    #+BEGIN_SRC lisp
-      (insert-row table stream)
-    #+END_SRC
-
-    When the =:action= option is =:write-only=, the =:insert-row= will
-    create a new record in the file.
-
-    This format is used mainly for table i/o.  A temporary sequential
-    read-only table is created.  Repeated calls to =insert-row= read
-    its contents which are available via the row-accessor.  These
-    contents can then be added to an in-memory table.  Using the
-    =do-rows= macro this is done as follows:
-    #+BEGIN_SRC lisp
-          (do-rows (read-only-row read-only-table)
-            (insert-row in-memory-table
-                        (row-contents read-only-row)))
-    #+END_SRC
-
-
-** Built-in column-types
-
-   To facilitate saving and reading in of tables from disk, we place
-   restrictions on types of values that can be stored in tables.  We
-   store only values that can be read in by the lisp reader and to
-   which we can apply equality and comparison tests.
-
-   Table columns can store all CL types that can be handled by the
-   lisp reader.  We list then
-   - symbols (including t, nil, and keyword symbols)
-   - number and its sub-types
-   - characters
-   - string and its sub-types
-   - vectors and arrays
-   - lists
-   - lambda forms
-     
-     
-   The following table lists the default comparators, and unbound
-   values.  If an entry is empty, it /has/ to be specified in the
-   column schema.
-   
-   | Type      | Equality    | Comparator  | Null        |
-   |-----------+-------------+-------------+-------------|
-   | Symbol    | #'eq        | #'string>   | unspecified |
-   | Number    | #'=         | #'>         | nil         |
-   | Character | #'char=     | #'char>     | nil         |
-   | String    | #'string=   | #'string>   | nil         |
-   | Vector    | unspecified | unspecified | nil         |
-   | Array     | unspecified | unspecified | nil         |
-   | List      | unspecified | unspecified | unspecified |
-   | λ form    | unspecified | unspecified | null        |
-   
-
-*** Note
-    Storage of vectors and arrays can be modified using the
-    =value-normalizer= function.  The input sequence can be converted
-    to a more efficient sequence by that function.  This guarantees
-    that the sequence will be stored in the same manner after it is
-    read in from the table.
-
-    
 * Dictionary
-  This dictionary is based on PCL27.  I have initially copied the
-  list of exported symbols of PCL27.  Not all of them may be
-  necessary for the MOP-based implementation
+  Parts of this dictionary is based on Practical Common Lisp, Chapter
+  27 (PCL27).  I have initially copied the list of exported symbols of
+  PCL27.  Not all of them may be necessary for the MOP-based
+  implementation.
 ** Table definition and instantiation
 *** /macro/ ~deftable~
     :PROPERTIES:
@@ -671,6 +701,7 @@
      - column-name :: symbol
      - column-option :: 
        - {:initarg initarg-name} |
+       - {:initform column-initform} |
        - {:type type-specifier} |
        - {:documentation string}
        - {:storage symbol} |
@@ -682,20 +713,34 @@
        - {:default-value valid-table-entry}
        - {:lazy-p boolean}
      - table-option ::
-       - {:default-initargs . initarg-list} |
+       - {:default-initargs . column-initargs} |
+       - {:depends-on parent-table-list} |
        - {:documentation . string} |
-#        - {:source path | string | symbol}
-       - {:type symbol}
-       - {:layout symbol}
-       - {:storage symbol}
-       - (:access symbol)
-       - {:action symbol}
+       - {:type symbol} |
+       - {:layout symbol} |
+       - {:storage symbol} |
+       - {:access symbol}
+       - {:action symbol} |
+       - {:row-count number} |
+       - {:max-row-count number} |
+       - {:min-row-count number}
+     - table-meta-data ::
+       - {:source path | string | symbol} |
+       - {:author string} |
+       - {keyword | (keyword [type & (:documentation string)])}*
+
 
 **** Arguments and values
      - table-name :: a non-nil symbol
      - supertable-name  :: a non-nil symbol
      - column-name :: a symbol
      - initarg :: a symbol
+     - column-initargs :: a list of column names and initialization
+          values
+     - column-initform :: A form that is evaluated for each column row
+          to initialize contents
+     - parent-table-list :: A list of symbols, naming the tables that
+          column initforms will use
      - type-specifier :: a CL type specifier
 
 **** Description
@@ -707,6 +752,9 @@
      =make-table=.
 
 ***** Table options
+      :PROPERTIES:
+      :ID:       snta4tm09gg0
+      :END:
 
       Table =:type= is one of =:column=, =:square= (default), or
       =:matrix=.  See [[id:wu17np515gg0][Table types]] for discussion of table types.
@@ -741,6 +789,30 @@
       next record of the specified file.  See [[id:cvj8u6002gg0][File based tables]] for
       more details.
 
+      Parent tables, declared via =:depends-on=, and supplied with
+      =make-table= must be of the same length.  These tables determine
+      the table row count.
+
+****** Row count options
+
+       The =:row-count=, =:min-row-count=, =:max-row-count= play a
+       mixed role.  Some examples are given in the following.
+
+       If a table depends on other tables, =row-count= is derived from
+       the parent tables (all of which must be of same length,
+       otherwise, the results are undefined).
+
+       =row-count= is initially nil.  It is set to non-nil by one of
+       the following:
+       - inserting a table row sets it to 1
+	 - Note: Further inserting of table rows increments =row-count=
+       - inserting the first column
+
+	 
+       In a table that is defined by inserting rows, =row-count= is a
+       status variable.  But when inserting a table column, the column
+       must equal the table's =row-count=
+
 ***** Column options
       Columns are initialized using =:initarg= slot and
       =:default-initargs= table options.  The =initialize-instance=
@@ -763,7 +835,11 @@
       to compare column entries for sorting and equality purposes.
 
       =:null-value= is used to specify a value which when stored
-      signals that the value has not been set yet.
+      signals that the value has not been set yet.  Using
+      =:null-value= is optional.  Specifying it allows for some space
+      and speed savings.  Otherwise, the table keeps additional
+      storage with flags for set and unset cells.  A cell is set to
+      null with a call =(setf (cell reference) +null+)=
 
       =:default-value= is the value returned, if the =:null-value= has
       not been set.
@@ -774,6 +850,36 @@
       Columns in an in =:memory= table can support all of =:read-only=
       =:write-only= or =:read/write= actions.  The actions can be
       changed while the table is in existence. 
+
+***** Table (column) initialization via =initform=
+      Column =initform= is a form that is evaluated in a null lexical
+      environment.  It initializes the column contents.  It has access
+      to all of table's columns, and to contents of the parent tables
+      (see syntax below)
+
+      The syntax is as follows
+      #+BEGIN_SRC lisp
+        (with-column-readers (&rest symbol+accessor-form-pairs)
+          body)
+      #+END_SRC
+      where =symbol+accessor-form-pairs= is a list of a symbol that is
+      used to reference a column (the accessor-form).  The accessor
+      form is either a symbol, referring to a column in the current
+      table, or a list =(column-name table-name)= with the
+      =column-name= referring to a column from table =table-name=,
+      =table-name= being one of parent tables declared with the
+      =:depends-on= table option.
+
+****** Implementation note:
+       For =initform= to function properly, the following must be
+       satisfied:
+       - =initform= is evaluated in lazy-mode, only when requested
+       - =initform=s should not form a circular dependency
+       - =initform= may depend on columns without =initform=.   It is
+         the users responsibility that all non-=initform= columns have
+         values assigned, via =initarg= or =default-initarg=
+       - parent tables must be of same length.
+       
 
 ***** Table inheritance
       A table can be defined to inherit the table schema and options
@@ -891,18 +997,23 @@
      Modeled after the specifications in Ch. 27 of PCL
 
 **** Syntax
-     *select* table &key (columns t) where distinct order-by from-end → new-table
+     *select* table &key (columns t) where distinct ordered from-end → new-table
      
 **** Arguments and values
      - table :: a square table
-     - columns :: t or a list of column names that will be transferred
+     - columns :: =t= or a list of column names that will be transferred
                   to the /new-table/
      - where :: a function that accepts a row as an argument and
                 returns true if it should be accepted in the new table
-     - distinct :: if true, eliminate duplicate rows from the result
-     - order-by :: A single column name or a list of column names used
-                   to sort the rows
-     - from-end :: Perform the row search from the table end
+     - distinct :: if =t=, eliminate duplicate rows from the result
+                   by testing all columns for equality.  If a list,
+                   test only specified columns.  See below for
+                   detailed explanation.
+     - ordered :: if =t= sort using sorting specifications of all
+                  columns.  Else a list that specifies columns used
+                  for sorting.  See below for detailed explanation.
+     - from-end :: Perform the row search or sorting from the table
+                   end
      - new-table :: A new table
        
 **** Description
@@ -910,6 +1021,49 @@
      /columns/, /where/, /distinct/, and /from-end/.  The ordering of
      the table is based on /columns/, /order-by/, and /from-end/.
 
+     - columns :: If =t=, all columns are transferred.  Otherwise only
+                  listed columns are transferred
+		  
+		  
+     Row sorting is done by using the column comparator and equality
+     predicates.  If multiple columns are used for comparison, row
+     comparison is done by considering columns left-to-right (this
+     ordering can be overridden), using the latter columns to break
+     ties from comparisons of earlier columns.  If the final test is
+     =equal=, the first row is accepted.
+
+***** Specifying tests for =:distinct= and =:ordered= keywords
+      The argument for those two keyword can be =t=, in which case,
+      the rows are compared based on contents of all columns using
+      comparators in the table schema.
+
+      If a list of column names is provided, then the comparison is
+      done with only the contents of those columns.
+
+      One can specify custom equality and comparison predicates for
+      the search, overriding the default specified in the table
+      schema.  This specified with a simplified with a limited lambda
+      list of the form
+      #+BEGIN_SRC lisp
+        (column-name :comparator comparator-function
+                     :equality-predicate equality-predicate-function)
+      #+END_SRC
+      =comparator-function= and =equality-predicate-function= are
+      functions of two arguments that return a generalized boolean.
+
+      To illustrate:
+      #+BEGIN_SRC lisp
+        (select table :ordered t) ;; sort using all columns and default comparators
+        (select table :ordered 'column-a) ;; sort based on contents of column-a
+        (select table :ordered '(column-a column-d)) ;; sort based on column-a, use column-d for tie-breakers
+        (select table :ordered '((column-f #'string>)) ;; sort using #'string> on column-f
+        (select table :ordered (list (list column-a (lambda (x y)
+                                                      (> (abs x)
+                                                         (sin y))))
+                                     (list column-f #'string>)))
+      #+END_SRC
+      
+		   
 *** /Function/ matching
 **** Syntax
      *matching* table &rest names-and-value-tests → row-matching-function
@@ -958,7 +1112,8 @@
      This function bypasses all type and value checking and
      normalization.
      
-*** /Function/ sort-rows
+*** /Function/ sorted-rows
+    
 
 **** Description
      Sorts rows according to sorting criteria for the specified
@@ -989,20 +1144,8 @@
      of the table.
 *** /Function/ =cell-value=
     
-**** Syntax:
-     *table-value* table row-selector column-selector → value
-
-**** Arguments and Values
-     - table :: a square table
-     - row-selector :: a row selector function or row index
-     - column-selector :: a column name or column index
-     - value :: Value stored in the table
-
-**** Description
-     Accesses the table cell specified by the selectors.  Throws
-     correctable errors =nonexistent-row= or =nonexistent-column= if a
-     selector fails to find a match.  The order in which the selectors
-     are applied is unspecified.
+    *Note* function =cell-value= has been replaced by the generic
+     function =value=
 *** /Function/ =column-values=
 
 **** Note
@@ -1132,21 +1275,7 @@
 **** Syntax:
      *table-value* table row-selector column-selector → value
 
-**** Arguments and Values
-     - table :: a square table
-     - row-selector :: a row selector function or row index
-     - column-selector :: a column name or column index
-     - value :: Value stored in the table
-
-**** Description
-     Accesses the table cell value specified by the selectors.
-     Setting the value triggers type and value checking and
-     normalization specifications in the table schema.
-
-
-     Throws correctable errors =nonexistent-row= or
-     =nonexistent-column= if a selector fails to find a match.  The
-     order in which the selectors are applied is unspecified.
+     *Note:* =table-value= has been superseded by =value=
 *** /Generic Function/ *value*
 **** Syntax
      *value* container column-name &optional row-selector -> value
@@ -1165,6 +1294,12 @@
      satisfies the row-selector.
 
      If /container/ is a row-accessor, it accesses that row's value.
+
+     Setting the value to =+null+= sets the value to empty.
+
+     Throws correctable errors =nonexistent-row= or
+     =nonexistent-column= if a selector fails to find a match.  The
+     order in which the selectors are applied is unspecified.
 *** /Macro/ ~with-columns~
 
 **** Description
@@ -1197,6 +1332,9 @@
 
 [fn:3] This requirements imposes some restrictions on table
    definition, and types of data that can be stored in the table.
+
+[fn:4] We support user-defined lisp readers, provided the appropriate
+package is active - this responsibility is delegated to the user for now
 
 
 
