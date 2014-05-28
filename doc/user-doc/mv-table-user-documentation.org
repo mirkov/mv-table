@@ -58,7 +58,7 @@
    - External, using external applications (such as databases)
      
    Memory resident square tables with columns stored as vectors the
-   most common and default.  Keys during initialization and slot or
+   most common are default.  Keys during initialization and slot or
    table  options are used to override the defaults.
    
 ** Table definition and initialization
@@ -200,22 +200,23 @@
     - empty
     - to be done
     
-    #+BEGIN_SRC lisp
-      (defmethod (setf table-column) (vector (table curtain) column-name vector)
-	(when (min-row-count-specified-p table)
-	  (if (geq (length vector) (min-row-count table))
-		(setf min-test t)
-		(error 'vector-too-short)))
-	(when (max-row-count-specified-p table)
-	  (if (leq (length vector) (max-row-count table))
-	      (setf max-test t)
-	      (error 'vector-too-long)))
-	(setf (slot-value table column-name) vector
-	      (min-row-count table) (min (length vector)
-					 (min-row-count table))
-	      (max-row-count table) (max (length vector)
-					 (max-row-count table))))
-    #+END_SRC
+
+    # #+BEGIN_SRC lisp
+    #   (defmethod (setf table-column) (vector (table curtain) column-name vector)
+    # 	(when (min-row-count-specified-p table)
+    # 	  (if (geq (length vector) (min-row-count table))
+    # 		(setf min-test t)
+    # 		(error 'vector-too-short)))
+    # 	(when (max-row-count-specified-p table)
+    # 	  (if (leq (length vector) (max-row-count table))
+    # 	      (setf max-test t)
+    # 	      (error 'vector-too-long)))
+    # 	(setf (slot-value table column-name) vector
+    # 	      (min-row-count table) (min (length vector)
+    # 					 (min-row-count table))
+    # 	      (max-row-count table) (max (length vector)
+    # 					 (max-row-count table))))
+    # #+END_SRC
 
 *** States of square tables
 
@@ -658,14 +659,15 @@
 	     :where (matching flight-xyz (= control-tower "JKF")))
    #+END_SRC
    
-** Generic functions and methods: Deriving and combining tables, creating summaries
+** Generic functions and methods: From tables to tables and/or statistics
+
    A table can be derived from values in one or more tables.  We can
-   also obtain one or more summaries of a table.  This is done with
-   functions and methods whose arguments are tables.
+   also obtain one or more summaries of a table data, i.e., statistics.
+   This is done with functions and methods whose arguments are tables.
 
    
 
-**** Table summary
+**** Table statistics
      Consider the following generic function definition
      #+BEGIN_SRC lisp
        (defgeneric column-max (table &optional columns)

@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title><code>mv-table</code> user documentation</title>
-<!-- 2014-05-27 Tue 14:10 -->
+<!-- 2014-05-28 Wed 08:30 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Mirko Vukovic" />
@@ -187,7 +187,7 @@ for the JavaScript code in this tag.
 </ul>
 </li>
 <li><a href="#sec-3-3">3.3. Selecting parts of a table</a></li>
-<li><a href="#sec-3-4">3.4. Generic functions and methods: Deriving and combining tables, creating summaries</a>
+<li><a href="#sec-3-4">3.4. Generic functions and methods: From tables to tables and/or statistics</a>
 <ul>
 <li><a href="#sec-3-4-1">3.4.1. Writing methods with tables</a></li>
 </ul>
@@ -350,7 +350,7 @@ native or foreign matrix, or as a single native vector.
 
 <p>
 Memory resident square tables with columns stored as vectors the
-most common and default.  Keys during initialization and slot or
+most common are default.  Keys during initialization and slot or
 table  options are used to override the defaults.
 </p>
 </div>
@@ -694,25 +694,6 @@ things can go in several directions
 <li>to be done
 </li>
 </ul>
-
-<div class="org-src-container">
-
-<pre class="src src-lisp">(defmethod (setf table-column) (vector (table curtain) column-name vector)
-  (when (min-row-count-specified-p table)
-    (if (geq (length vector) (min-row-count table))
-	  (setf min-test t)
-	  (error 'vector-too-short)))
-  (when (max-row-count-specified-p table)
-    (if (leq (length vector) (max-row-count table))
-	(setf max-test t)
-	(error 'vector-too-long)))
-  (setf (slot-value table column-name) vector
-	(min-row-count table) (min (length vector)
-				   (min-row-count table))
-	(max-row-count table) (max (length vector)
-				   (max-row-count table))))
-</pre>
-</div>
 </div>
 </div>
 <div id="outline-container-sec-2-1-2" class="outline-4">
@@ -1281,7 +1262,7 @@ row that satisfies the <i>predicate function</i>
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(setf *row-accessor* (select-row table predicate-function))
+<pre class="src src-lisp">(setf row-accessor (select-row table predicate-function))
 </pre>
 </div>
 <p>
@@ -1414,18 +1395,18 @@ correct nomenclature)
 </div>
 </div>
 <div id="outline-container-sec-3-4" class="outline-3">
-<h3 id="sec-3-4"><span class="section-number-3">3.4</span> Generic functions and methods: Deriving and combining tables, creating summaries</h3>
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> Generic functions and methods: From tables to tables and/or statistics</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 A table can be derived from values in one or more tables.  We can
-also obtain one or more summaries of a table.  This is done with
-functions and methods whose arguments are tables.
+also obtain one or more summaries of a table data, i.e., statistics.
+This is done with functions and methods whose arguments are tables.
 </p>
 </div>
 
 
 
-<ol class="org-ol"><li>Table summary<br  /><div class="outline-text-5" id="text-3-4-0-1">
+<ol class="org-ol"><li>Table statistics<br  /><div class="outline-text-5" id="text-3-4-0-1">
 <p>
 Consider the following generic function definition
 </p>
@@ -2696,7 +2677,7 @@ Column storage type matters only for column read/write access.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Mirko Vukovic</p>
-<p class="date">Created: 2014-05-27 Tue 14:10</p>
+<p class="date">Created: 2014-05-28 Wed 08:30</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.5)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
