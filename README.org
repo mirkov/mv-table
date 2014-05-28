@@ -4,8 +4,9 @@
 * Aim
 
   *NOTE*: this is wish-ware - none of this software has yet been
-  written.  The wishes are listed in this file, and in html files in
-  the documentation directory.
+  written.  The wishes are listed in the document you are reading, and
+  in html files in the documentation directory.  The documentation is
+  not yet in a fully self-consistent and correct state.
 
   ~mv-table~ is a CL class type used to store tables of data.
   ~mv-table~'s slots store vectors of values (but see below).  It
@@ -19,6 +20,10 @@
 
   Being objects, ~mv-table~ supports inheritance, object
   initialization, generic functions, and methods.
+
+  Defined as classes, ~mv-table~ supports generic functions and
+  methods.  These are used to define operations to derive new tables
+  from old ones, or produce data summaries (statistics).
 
   Finally, ~mv-table~ supports serialization: tables can be saved
   into files and loaded at a later CL session.
@@ -50,6 +55,7 @@
 * Documentation
   The documentation is currently
   - [[file:doc/user-doc/mv-table-user-documentation.org][User documentation]]
+  - [[file:doc/developer-doc/mv-table-developer-documentation.org][Developer documentation]]
 
 * References
   - [[http://dev.mysql.com/doc/index.html][my-SQL documentation]]  These files are too large and have too much
