@@ -5,7 +5,7 @@ org-documents are in mv-table/doc/, while the published documents
 are in mv-table/documentation")
 
 (defun update-mv-table-org-publish ()
-  "Update the value of mv-table-org-publish
+  "Overwrite the value of org-publish-project-alist with new definition for mv-table
 
 This is a user (developer) interface."
   (interactive "P")
@@ -21,5 +21,5 @@ This is a user (developer) interface."
 	      :publishing-directory ,documentation-directory
 	      :recursive ,recursive
 	      :publishing-function ,publishing-function))))
-      (setq org-publish-project-alist mv-table-org-publish)))
+      (setq org-publish-project-alist mv-table-org-publish))))
 

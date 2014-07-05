@@ -9,11 +9,12 @@
     - a structure of vectors
   - a single vector
   - a matrix
+  - a collection of tables of same type
     
     
   Each of these has impact on table growth and type checking
 
-  The table storage options, by table type are
+  The table storage options, by table type are[fn:1]
   |              | N | VxV | SxV | V | M |
   |--------------+---+-----+-----+---+---|
   | Column table | \check | \check   | \check   | \check |   |
@@ -25,13 +26,13 @@
   
   A table can add rows on the storage options (\star is for square tables
   where all columns have equal length):
-  |     | + Row |
-  |-----+-------|
-  | N   | \check     |
-  | VxV | \check\star    |
-  | SxV | \check\star    |
-  | V   |       |
-  | M   |       |
+  |     | + Row | + Col |
+  |-----+-------+-------|
+  | N   | \check     |       |
+  | VxV | \check\star    |  \check     |
+  | SxV | \check\star    |   \check    |
+  | V   |       |       |
+  | M   |       |       |
 
   Columns are added by redefining a table, much as a class can be
   redefined by recompiling =defclass=.  All table storage types can
@@ -41,9 +42,9 @@
   the same data type in all the cells.
   | Type   | Checking? |
   |--------+-----------|
-  | Column | \check         |
-  | Square | \check         |
-  | Matrix | \times         |
+  | Column | \check    |
+  | Square | \check    |
+  | Matrix | \times    |
 
   Efficient type works only for V\times{}V and S\times{}V storage types.
   Internally, the vectors are defined to store values of a specified
@@ -82,9 +83,9 @@
 
 
   Table meta-data (author, source, min, max row counts, allowed
-  operations, etc), are implemented via the table-md standard class or
-  classes specialized on it.  This class is a mix-in to the mv-table
-  class.
+  operations, etc), are implemented via the table meta-data
+  (=table-md=) standard class or or classes specialized on it.  This
+  class is a mix-in to the mv-table class.
 
   When the table is instantiated in column mode it has slots storing
   columns and more slots storing the table meta-data.  The column
@@ -100,3 +101,8 @@
   Thus, for example, (setf (row-index row) new-index) method will have
   a =:before= method for sequential file-based table that will check
   that new-index \geq current-index, or else issue an error.
+
+* Footnotes
+
+[fn:1] What is the N type?
+

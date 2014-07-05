@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title><code>mv-table</code> user documentation</title>
-<!-- 2014-05-28 Wed 08:30 -->
+<!-- 2014-05-28 Wed 08:38 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Mirko Vukovic" />
@@ -362,7 +362,7 @@ table  options are used to override the defaults.
 Tables are defined using the <code>deftable</code> macro and instantiated
 using the <code>make-instance</code> function.  The table definition and
 instantiation syntax is based on CLOS' <code>defclass</code> and
-=make-instance=<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>.  Under the hood, tables are implemented
+<code>make-instance</code> <sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>.  Under the hood, tables are implemented
 using MOP's extension to CLOS.
 </p>
 
@@ -422,9 +422,9 @@ contents can then be added to an in-memory table.  Using the
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(do-rows (read-only-row read-only-table)
+<pre class="src src-lisp">(<span style="color: #859900;">do-rows</span> (read-only-row read-only-table)
   (insert-row in-memory-table
-	      (row-contents read-only-row)))
+              (row-contents read-only-row)))
 </pre>
 </div>
 </div>
@@ -749,18 +749,18 @@ MOP).  An example:
 <div class="org-src-container">
 
 <pre class="src src-lisp">(deftable flight-path ()
-  ((time :storage 'vector
-	 :element-type 'float)
-   (distance :storage 'foreign-vector
-	     :element-type 'double-float)
-   (altitude :documentation "Plane altitude"
-	     :element-type 'number)
-   (bearing :storage nil)
-   (radar :element-type 'string
-	  :documentation "control tower identifier"))
-  (:documentation "Table with a plane flight path")
-  (:build-method :columns)
-  (:max-rows 1500))
+  ((time <span style="color: #859900;">:storage</span> 'vector
+         <span style="color: #859900;">:element-type</span> 'float)
+   (distance <span style="color: #859900;">:storage</span> 'foreign-vector
+             <span style="color: #859900;">:element-type</span> 'double-float)
+   (altitude <span style="color: #859900;">:documentation</span> <span style="color: #2aa198;">"Plane altitude"</span>
+             <span style="color: #859900;">:element-type</span> 'number)
+   (bearing <span style="color: #859900;">:storage</span> nil)
+   (radar <span style="color: #859900;">:element-type</span> 'string
+          <span style="color: #859900;">:documentation</span> <span style="color: #2aa198;">"control tower identifier"</span>))
+  (<span style="color: #859900;">:documentation</span> <span style="color: #2aa198;">"Table with a plane flight path"</span>)
+  (<span style="color: #859900;">:build-method</span> <span style="color: #859900;">:columns</span>)
+  (<span style="color: #859900;">:max-rows</span> 1500))
 </pre>
 </div>
 <p>
@@ -851,26 +851,26 @@ A single table definition will suffice for all instances<sup><a id="fnr.4" name=
 <div class="org-src-container">
 
 <pre class="src src-lisp">(deftable flight-path ()
-  ((time :storage array
-	 :element-type 'float
-	 :initform '(time-entry file))
-   (distance :storage 'foreign-vector
-	     :element-type 'double-float
-	     :initform '(distance-entry file))
-   (altitude :documentation "Plane altitude"
-	     :element-type 'number
-	     :initform '(altitude-entry file))
-   (bearing :storage nil
-	    :initform '(bearing-entry file))
-   (radar :element-type 'string
-	  :documentation "control tower identifier"
-	  :initform '(radar-entry file)))
-  ;; build method, table type, access, sources may be deduced from
-  ;; instantiation arguments, and are unnecessary
- #| (:build-method :row-wise)
-  (:table-type :sequential)
-  (:access :read-only)
-  (:sources file)|#)
+  ((time <span style="color: #859900;">:storage</span> array
+         <span style="color: #859900;">:element-type</span> 'float
+         <span style="color: #859900;">:initform</span> '(time-entry file))
+   (distance <span style="color: #859900;">:storage</span> 'foreign-vector
+             <span style="color: #859900;">:element-type</span> 'double-float
+             <span style="color: #859900;">:initform</span> '(distance-entry file))
+   (altitude <span style="color: #859900;">:documentation</span> <span style="color: #2aa198;">"Plane altitude"</span>
+             <span style="color: #859900;">:element-type</span> 'number
+             <span style="color: #859900;">:initform</span> '(altitude-entry file))
+   (bearing <span style="color: #859900;">:storage</span> nil
+            <span style="color: #859900;">:initform</span> '(bearing-entry file))
+   (radar <span style="color: #859900;">:element-type</span> 'string
+          <span style="color: #859900;">:documentation</span> <span style="color: #2aa198;">"control tower identifier"</span>
+          <span style="color: #859900;">:initform</span> '(radar-entry file)))
+  <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">build method, table type, access, sources may be deduced from</span>
+  <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">instantiation arguments, and are unnecessary</span>
+ <span style="color: #93a1a1; font-style: italic;">#| (:build-method :row-wise)</span>
+<span style="color: #93a1a1; font-style: italic;">  (:table-type :sequential)</span>
+<span style="color: #93a1a1; font-style: italic;">  (:access :read-only)</span>
+<span style="color: #93a1a1; font-style: italic;">  (:sources file)|#</span>)
 </pre>
 </div>
 
@@ -882,9 +882,9 @@ executing
 
 <pre class="src src-lisp">(setf read-only-table
       (make-table 'flight-path
-		  :source #P"/some-file.txt"
-		  :format :csv
-		  :if-does-not-exist :error))
+                  <span style="color: #859900;">:source</span> #P<span style="color: #2aa198;">"/some-file.txt"</span>
+                  <span style="color: #859900;">:format</span> <span style="color: #859900;">:csv</span>
+                  <span style="color: #859900;">:if-does-not-exist</span> <span style="color: #859900;">:error</span>))
 </pre>
 </div>
 <p>
@@ -933,9 +933,9 @@ We can load the new table as follows:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(do-rows (row read-only-table)
+<pre class="src src-lisp">(<span style="color: #859900;">do-rows</span> (row read-only-table)
   (add-row in-memory-table
-	   (row-contents row)))
+           (row-contents row)))
 </pre>
 </div>
 <p>
@@ -948,11 +948,11 @@ One can also use <code>loop</code> and <a href="#sec-4-4-1">advance-row</a>:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(loop :for row = (advance-row table 1 nil :eot)
-   :if (equal row :eot)
-   :do (return)
-   :else :do (add-row in-memory-table
-		      (row-contents row)))
+<pre class="src src-lisp">(<span style="color: #859900;">loop</span> <span style="color: #859900;">:for</span> row = (advance-row table 1 nil <span style="color: #859900;">:eot</span>)
+   <span style="color: #859900;">:if</span> (equal row <span style="color: #859900;">:eot</span>)
+   <span style="color: #859900;">:do</span> (<span style="color: #859900;">return</span>)
+   <span style="color: #859900;">:else</span> <span style="color: #859900;">:do</span> (add-row in-memory-table
+                      (row-contents row)))
 </pre>
 </div>
 
@@ -970,10 +970,10 @@ We can also use it to standardize writing of files.
 
 <pre class="src src-lisp">(setf output-table
        (make-table 'flight-path
-		   :source in-memory-table
-		   :format :internal ;; or :csv
-		   :storage #P"/output-file.dat"
-		   :if-exists :supersede))
+                   <span style="color: #859900;">:source</span> in-memory-table
+                   <span style="color: #859900;">:format</span> <span style="color: #859900;">:internal</span> <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">or :csv</span>
+                   <span style="color: #859900;">:storage</span> #P<span style="color: #2aa198;">"/output-file.dat"</span>
+                   <span style="color: #859900;">:if-exists</span> <span style="color: #859900;">:supersede</span>))
 </pre>
 </div>
 <p>
@@ -994,9 +994,9 @@ Adding rows to the table amounts to writing table records to it:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(do-rows (row in-memory-table)
+<pre class="src src-lisp">(<span style="color: #859900;">do-rows</span> (row in-memory-table)
   (add-row output-table
-	   (row-contents row)))
+           (row-contents row)))
 (finalize-table)
 </pre>
 </div>
@@ -1041,13 +1041,13 @@ We can use initforms and initargs to build a table of sines
 <div class="org-src-container">
 
 <pre class="src src-lisp">(deftable sin-table ()
-  ((x :storage array
-      :element-type 'float
-      :initform '(range 0 pi 21))
-   (y :storage array
-      :element-type 'float
-      :initform '(sin x)))
-  (:documentation "Table of the sin function"))
+  ((x <span style="color: #859900;">:storage</span> array
+      <span style="color: #859900;">:element-type</span> 'float
+      <span style="color: #859900;">:initform</span> '(range 0 pi 21))
+   (y <span style="color: #859900;">:storage</span> array
+      <span style="color: #859900;">:element-type</span> 'float
+      <span style="color: #859900;">:initform</span> '(sin x)))
+  (<span style="color: #859900;">:documentation</span> <span style="color: #2aa198;">"Table of the sin function"</span>))
 </pre>
 </div>
 <p>
@@ -1069,7 +1069,7 @@ Of course, the following works as well:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(make-instance 'sin-table :x (range 0 1d0 51))
+<pre class="src src-lisp">(make-instance 'sin-table <span style="color: #859900;">:x</span> (range 0 1d0 51))
 </pre>
 </div>
 <p>
@@ -1096,16 +1096,16 @@ Table contents can be derived from other tables:
 <div class="org-src-container">
 
 <pre class="src src-lisp">(deftable derived ()
-  ((sum :storage array
-	:element-type 'float)))
+  ((sum <span style="color: #859900;">:storage</span> array
+        <span style="color: #859900;">:element-type</span> 'float)))
 
-(defmethod initialize-instance :after ((self derived) &amp;key t1 t2
-							&amp;allow-other-keys)
+(<span style="color: #859900;">defmethod</span> <span style="color: #268bd2;">initialize-instance</span> <span style="color: #859900;">:after</span> ((self derived) <span style="color: #b58900;">&amp;key</span> t1 t2
+                                                        <span style="color: #b58900;">&amp;allow-other-keys</span>)
   (setf (column self 'sum)
-	(map-rows (lambda (row-t1 row-t2)
-		    (+ (column-value row-t1 'A)
-		       (column-value row-t2 'B)))
-		  t1 t2)))
+        (map-rows (<span style="color: #859900;">lambda</span> (row-t1 row-t2)
+                    (+ (column-value row-t1 'A)
+                       (column-value row-t2 'B)))
+                  t1 t2)))
 </pre>
 </div>
 <p>
@@ -1126,19 +1126,19 @@ options.  Their values are available in the <code>initialize-instance</code>
 <pre class="src src-lisp">(deftable calendar ()
   ((day)
    (day-of-week))
-  (:meta-data
-   :year
-   :month))
+  (<span style="color: #859900;">:meta-data</span>
+   <span style="color: #859900;">:year</span>
+   <span style="color: #859900;">:month</span>))
 
-(defmethod initialize-instance :after ((self calendar) &amp;key
-				       &amp;allow-other-keys)
-  (let* ((days-of-month (days-of-month (year self) (month self)))
-	 (days-of-week (mapcar (lambda (day)
-				 (day-of-week (year self) (month self)
-					      day))
-			       days-of-month)))
+(<span style="color: #859900;">defmethod</span> <span style="color: #268bd2;">initialize-instance</span> <span style="color: #859900;">:after</span> ((self calendar) <span style="color: #b58900;">&amp;key</span>
+                                       <span style="color: #b58900;">&amp;allow-other-keys</span>)
+  (<span style="color: #859900;">let*</span> ((days-of-month (days-of-month (year self) (month self)))
+         (days-of-week (mapcar (<span style="color: #859900;">lambda</span> (day)
+                                 (day-of-week (year self) (month self)
+                                              day))
+                               days-of-month)))
     (setf (column self 'day) days-of-month
-	  (column self 'day-of-week) days-of-week)))
+          (column self 'day-of-week) days-of-week)))
 </pre>
 </div>
 <p>
@@ -1148,9 +1148,9 @@ available as keyword arguments to <code>make-table</code>
 <div class="org-src-container">
 
 <pre class="src src-lisp">(setf *calendar*
-      (mapcar (lambda (month)
-		(make-table 'calendar :year 2013 :month month))
-	      '(0 1 2 3 4 5 6 7 8 9 10 11)))
+      (mapcar (<span style="color: #859900;">lambda</span> (month)
+                (make-table 'calendar <span style="color: #859900;">:year</span> 2013 <span style="color: #859900;">:month</span> month))
+              '(0 1 2 3 4 5 6 7 8 9 10 11)))
 </pre>
 </div>
 <p>
@@ -1159,9 +1159,9 @@ And we can query what day of the week is on September 30th:
 <div class="org-src-container">
 
 <pre class="src src-lisp">(select (eighth *calendar*)
-	:column 'day-of-week
-	:where (matching-row (eightht *calendar*)
-			     (day 30)))
+        <span style="color: #859900;">:column</span> 'day-of-week
+        <span style="color: #859900;">:where</span> (matching-row (eightht *calendar*)
+                             (day 30)))
 </pre>
 </div>
 </div>
@@ -1287,7 +1287,7 @@ Finally, one can export the row into a CL sequence
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(export row-accessor &amp;optional (type :list))
+<pre class="src src-lisp">(export row-accessor <span style="color: #b58900;">&amp;optional</span> (type <span style="color: #859900;">:list</span>))
 </pre>
 </div>
 <p>
@@ -1388,8 +1388,8 @@ correct nomenclature)
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(select flight-xyz :columns '(time altitude)
-	:where (matching flight-xyz (= control-tower "JKF")))
+<pre class="src src-lisp">(select flight-xyz <span style="color: #859900;">:columns</span> '(time altitude)
+        <span style="color: #859900;">:where</span> (matching flight-xyz (= control-tower <span style="color: #2aa198;">"JKF"</span>)))
 </pre>
 </div>
 </div>
@@ -1412,13 +1412,13 @@ Consider the following generic function definition
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(defgeneric column-max (table &amp;optional columns)
-  (:documentation
-"Return an a-list of column names and their maximum values
+<pre class="src src-lisp">(<span style="color: #859900;">defgeneric</span> <span style="color: #268bd2;">column-max</span> (table <span style="color: #b58900;">&amp;optional</span> columns)
+  (<span style="color: #859900;">:documentation</span>
+<span style="color: #2aa198;">"Return an a-list of column names and their maximum values</span>
 
-If columns is specified, return maxima for those columns.  If
-columns is t (the default value), return maxima for all columns.
-If columns is nil, return nil"))
+<span style="color: #2aa198;">If columns is specified, return maxima for those columns.  If</span>
+<span style="color: #2aa198;">columns is t (the default value), return maxima for all columns.</span>
+<span style="color: #2aa198;">If columns is nil, return nil"</span>))
 </pre>
 </div>
 <p>
@@ -1728,7 +1728,7 @@ The syntax is as follows
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(with-column-readers (&amp;rest symbol+accessor-form-pairs)
+<pre class="src src-lisp">(<span style="color: #859900;">with-column-readers</span> (<span style="color: #b58900;">&amp;rest</span> symbol+accessor-form-pairs)
   body)
 </pre>
 </div>
@@ -2052,8 +2052,8 @@ list of the form
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(column-name :comparator comparator-function
-	     :equality-predicate equality-predicate-function)
+<pre class="src src-lisp">(column-name <span style="color: #859900;">:comparator</span> comparator-function
+             <span style="color: #859900;">:equality-predicate</span> equality-predicate-function)
 </pre>
 </div>
 <p>
@@ -2066,14 +2066,14 @@ To illustrate:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(select table :ordered t) ;; sort using all columns and default comparators
-(select table :ordered 'column-a) ;; sort based on contents of column-a
-(select table :ordered '(column-a column-d)) ;; sort based on column-a, use column-d for tie-breakers
-(select table :ordered '((column-f #'string&gt;)) ;; sort using #'string&gt; on column-f
-(select table :ordered (list (list column-a (lambda (x y)
-					      (&gt; (abs x)
-						 (sin y))))
-			     (list column-f #'string&gt;)))
+<pre class="src src-lisp">(select table <span style="color: #859900;">:ordered</span> t) <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">sort using all columns and default comparators</span>
+(select table <span style="color: #859900;">:ordered</span> 'column-a) <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">sort based on contents of column-a</span>
+(select table <span style="color: #859900;">:ordered</span> '(column-a column-d)) <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">sort based on column-a, use column-d for tie-breakers</span>
+(select table <span style="color: #859900;">:ordered</span> '((column-f #'string&gt;)) <span style="color: #93a1a1; font-style: italic;">;; </span><span style="color: #93a1a1; font-style: italic;">sort using #'string&gt; on column-f</span>
+(select table <span style="color: #859900;">:ordered</span> (list (list column-a (<span style="color: #859900;">lambda</span> (x y)
+                                              (&gt; (abs x)
+                                                 (sin y))))
+                             (list column-f #'string&gt;)))
 </pre>
 </div>
 </div>
@@ -2677,7 +2677,7 @@ Column storage type matters only for column read/write access.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Mirko Vukovic</p>
-<p class="date">Created: 2014-05-28 Wed 08:30</p>
+<p class="date">Created: 2014-05-28 Wed 08:38</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.5)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

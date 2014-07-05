@@ -5,8 +5,8 @@
 ** Introduction
    =mv-table= is a CLOS inspired data structure for storing and
    manipulating columns of data.  It supports several types of
-   organization, in-memory storage, access, and operations.  It also
-   supports reading to and writing from disk [fn:3].
+   organization, storage, access, and operations.  It also supports
+   reading to and writing from disk [fn:3].
 
    Being based on CLOS (and implemented using MOP), table definitions
    support inheritance and on-the-fly redefinition upon re-evaluation
@@ -27,16 +27,15 @@
                       and index of the entry in the column
    - square tables :: tables of columns of equal length.  Access to
                       table elements is either via columns names and
-                      row index or rows selection rules (subject to
-                      some restrictions discussed below) and column
-                      name.
+                      row name, index selection rule (subject to some
+                      restrictions discussed below)
 		      
 		      Square tables are a specialization of column
                       tables.  They support all operations as column
                       tables and add additional ones.
    - matrix tables :: Store matrices of data of the same type.  The
                       primary mean of reference is by row and column
-                      index
+                      index (including ranges) or names
 		      
 
 
@@ -49,6 +48,20 @@
 		   
 		   Column tables are accessed column by column, while
                    square and matrix tables row by row.
+
+		   
+
+   Tables are also defined as
+   - Real :: a table as a single entity
+   - Virtual :: a collection of several tables, possibly spread out
+                over several machines
+
+   Tables are also defined as
+   - Static :: once defined and filled, its dimensions and/or content
+                are not allowed to change
+   - Dynamic :: tables are allowed to grow.  Real tables can have
+                columns or rows added.  Virtual tables can accept new
+                members.
 
 
    Data storage is implemented in several ways:
@@ -69,7 +82,7 @@
    Tables are defined using the =deftable= macro and instantiated
    using the =make-instance= function.  The table definition and
    instantiation syntax is based on CLOS' =defclass= and
-   =make-instance=[fn:1].  Under the hood, tables are implemented
+   =make-instance= [fn:1].  Under the hood, tables are implemented
    using MOP's extension to CLOS.
 
    Tables are defined using the =deftable= macro (similar to
@@ -181,14 +194,14 @@
   The ~column~ table is the most primitive kind of table.  Their
   properties are compared here:
   | Property          | Column | Square |
-  |-------------------+---------+--------|
-  | Column accessor   | yes     | yes    |
-  | min, max length   | yes     | yes    |
-  | Loop over columns | yes     | yes    |
-  | Length            | no      | yes    |
-  | Element accessor  | no      | yes    |
-  | Row selector      | no      | yes    |
-  | Loop over rows    | no      | yes    |
+  |-------------------+--------+--------|
+  | Column accessor   | yes    | yes    |
+  | min, max length   | yes    | yes    |
+  | Loop over columns | yes    | yes    |
+  | Length            | no     | yes    |
+  | Element accessor  | no     | yes    |
+  | Row selector      | no     | yes    |
+  | Loop over rows    | no     | yes    |
 
   Note that the column tables do not have a row count, only minimum
   and maximum row count
