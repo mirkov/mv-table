@@ -1,3 +1,21 @@
+2014-07-16  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* doc/user-doc/mv-table-user-documentation.org: Added
+	specification that we do not honor multiple column specifications,
+	but only the last one.
+
+	* init/column-table-package-def.lisp (#:column-table): New file,
+	new package for colum-table.  This package serves as a proof of
+	concept.
+
+	* init/table-dev-package-def.lisp (#:table-dev): New package for
+	internal table development code
+
+	* init/utilities.lisp (:table-dev): Moved to :table-dev package
+
+	* mv-table.asd (#:mv-table): Focusing on column-table.  Commented
+	out all un-necessary modules and files
+
 2014-04-05  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* doc/user-doc/mv-table-user-documentation.org: Replacied word

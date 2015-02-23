@@ -1,0 +1,372 @@
+#+title: Design decisions that governed the inernal code structure
+
+
+* Protocols for retreiving and storing data in read-only and write-only modes
+
+** General interface for storing and accessing sequences
+
+   The interface creates an object that supports protocols for
+   refering to a sequence and its parts.  The enforces/guarantees that
+   the sequence type and data type to be stored or retreived.
+
+   Thus, having defined a variable =gseq= of tpe
+   =generalized-strict-sequence= (gss) to be of specific type (list,
+   vector, foreign-vector, etc), we can do the following:
+   #+BEGIN_SRC lisp
+     (let ((gseq (make-gss :sequence-type sequence-type
+                           :data-type data-type
+                           :protocol :hdf5
+                           :accesor hd5-accessor
+                           :direction :output
+                           :initial-contents some-list)))
+       (setf gseq-seq gseq some-lisp-sequence))
+   #+END_SRC
+   The interesting words are the protocol and the accessor.  The
+   protocol can be one of may, such as :ieee-float, :txt, :hdf5.  The
+   accessor is used by the protocol machinery to access the place
+   where the sequence resides.  For :txt, it would be a stream to a
+   text file, properly positioned.  For :hdf5, it would be a data
+   structure specifies the file, and the location in the file.
+
+   When operating on gseq, the following are guaranteed:
+   - Any proper lisp sequence can be stored, if the protocol supports
+     the storage.
+   - The values in the lisp sequence must satisfy:
+     - =(typep value (data-type gseq))=
+   - When the accessor is a native accessor (gseq resides in the lisp
+     image), the sequence is stored according to =sequence-type=
+     definition. 
+   - Retreived sequences must be returned as specified by :sequence-type
+   - Retreived sequences must contain data that satisfies
+     the :data-type
+     
+     
+   gss has the following user interface (=gseq= being of gss type)
+   - =(make-gss etc)= creates a new, initialized sequence.  It's
+     contents can be initialized, or set at a later date, depending on
+     the protocol.
+   - =(gseq-seq gseq)= returns the sequence value, in specified format
+   - =(setf (gseq-seq gseq) sequence)= stores the sequence into gseq
+   - =(gseq-subseq gseq start-index &optional end-index)= returns a
+     subsequence
+   - =(setf (gseq-subseq gseq start-index &optional end-index)
+     sequence)= stores the sequence into a subsequence
+   - =(gseq-ref gseq i)= returns the element at position /i/
+   - =(setf (gseq-ref gseq i) value)= sets the /i-th/ element to
+     value
+   - =(interface gseq)= returns the interface that gseq uses.  This
+     can be used to close the portal when necessary.
+   - =(cleanup-gseq gseq)= executes various cleanup necessary by
+     remote resources.  It can be synchronous or asynchronous
+     
+     
+   By storing a sequence, it is meant that for native gseq's the
+   sequence is coerced to the gseq sequence-type.  By storing a value,
+   it is meant that the value is first coerced to the gseq data-type.
+
+   =gseq= does not create the access (such as streams) to the
+   resources or close them.  This is the responsability of the caller.
+
+** Protocols for column-tables
+   :PROPERTIES:
+   :ID:       knhkhra14kg0
+   :END:
+
+   Column tables use column-accessors to access tabular data. 
+   
+   The column table data access protocol is based on the following
+   properties:
+   1. Sequence-type
+   2. Data-type
+   3. Direction: input, output, bidirectional
+   4. Data format: CL-readable, other encodings, such as
+      - binary ieee-floating-point
+   5. Allocation: :instance, or a protocol designator
+      such as :hdf5, :txt or :dat, :network, :eval
+   6. External resource, such as a stream, network address and port, a
+      database application that may be needed by some allocations
+     
+      
+   
+   For :instance allocation, columns are accessed using the standard
+   CLOS mechanism as implemented via MOP.  For all others, the MOP
+   protocola is over-ridden with an around-method, which calls methods
+   that specialize on those protocols.  These methods allow users to
+   customize column access to their protocols.
+   
+   For those methods, access to external data is full specified
+   by :allocation and resource.
+
+   The accessor initialization proceeds as follows:
+   - When defining the schema, the first five properties are declared,
+     including the column allocation (:instance, or other)
+   - When instantiating a table, we instantiate all the allocation
+     protocols:
+     - For :instance allocation, we use CLOS' default mechanism
+     - For others, we initialize the protocol using the value provided
+       via the :resource keyword to (make-instance table-schema).  The
+       resources are streams to files or to processes, or allocated
+       network resources.  These resources have to be created before
+       the table is instantiated.
+   - The accessing and setting of columns proceeds via a nested
+     approach:
+     - Table (class) column (slot) reader and writer methods
+       - Call to CLOS' slot-value
+	 - Execution of MOP's slot-value-using-class /around/ method
+	   + It calls the standard method for :instance allocation
+   - Details of =slot-value-using-class=
+     - We use the :around method to manage the process.  We do not use
+       either the :bofore or :after methods.
+     - The =(call-next-method)= is used to handle the :instance
+       allocation
+     - Generic functions specialized on allocation and resource are
+       called otherwise
+     - All other type checks and coercions transformations are done
+       within the :around method
+   - For all allocations but :instance, we are responsible for
+     freeing up the resources.  This is done via (release-resource
+     table column-name).
+
+
+   There are two types of data access: We access the whole column
+   (either to set or retrieve it), or we access a column value (either
+   to set it or retrieve it).
+
+
+   The accessing of whole columns is accomplished either natively (via
+   =call-next-method=) or using =external-column= and
+   =setf-external-column=.  The following is a one possible
+   implementation.
+   
+   For setting a column (writing into the table, direction output):
+   #+BEGIN_SRC lisp
+     (defmethod (setf slot-value-using-class) :around (sequence (class column-table)
+                                                object slot-meta-object)
+       (assert-output-method (action slot-meta-object))
+       (let ((sequence (coerce-sequence sequence
+                                        :sequence-type (sequence-type slot-meta-object)
+                                        :data-type (slot-definition-type slot-meta-object))))
+         (if (eq (slot-definition-allocation slot-meta-object) :instance)
+             (call-next-method)
+             (funcall #'setf-external-column
+                      sequence
+                      (slot-definition-allocation slot-meta-object)
+                      (column-external-resource slot-meta-object)))))
+   #+END_SRC
+
+   Likewise for accessing (reading data, direction input)
+   #+BEGIN_SRC lisp
+     (defmethod slot-value-using-class :around (sequence (class column-table)
+                                                       object slot-meta-object)
+       (assert-input-method (action slot-meta-object))
+       (let ((sequence
+              (if (eq (slot-definition-allocation slot-meta-object) :instance)
+                  (call-next-method)
+                  (funcall #'external-column
+                           (slot-definition-allocation slot-meta-object)
+                           (column-external-resource slot-meta-object)))))
+         (coerce-sequence sequence :type (sequence-type slot-meta-object)
+                          :data-type (slot-definition-type slot-meta-object))))
+   #+END_SRC
+   
+
+   For accessing a column element, we need to provide a method that
+   specializes on the column type: for list, it is =nth=, for arrays
+   =aref=.  Irrespective of the internal column type, the method will
+   only needs the index.  We also need to provide methods for setting
+   and accessing an element at a particular index location.  These use
+   generic functions the user can extend for their own sequence types.
+
+   For native sequences, we use the
+   =read/write-native-sequence-value= method that specializes on the
+   sequence-type and acts on the slot-value using index.
+
+   For external sequences, the =read/write-external-sequence-value=
+   method is used.  It specializes on the allocation type and external
+   resource type.  In addition to the index index it also passes the
+   table and column-name.  The latter two may be needed in case the
+   protocol does not support direct access to the element, and insead
+   the whole column has to be retrieved (and re-set in case of setf)
+
+   For accessing a column value
+   #+BEGIN_SRC lisp
+     (defun column-element (value table column-name index)
+       (let ((column-schema (column-schema table column-name)))
+         (assert-input-method (action column-schema))
+       (let ((value
+              (if (eq (slot-definition-allocation slot-meta-object) :instance)
+                  (read-native-sequence-value
+                   (sequence-type column-schema) (slot-value table column-name)
+                   index)
+                  (read-external-sequence-value
+                   (slot-definition-allocation slot-meta-object)
+                   (column-external-resource slot-meta-object)
+                   index table column-name))))
+         (coerce-value value :data-type (slot-definition-type slot-meta-object)))))
+   #+END_SRC
+
+
+   #+BEGIN_SRC lisp
+     (defmethod (setf column-element) (value table column-name index)
+       (let ((column-schema (column-schema table column-name)))
+         (assert-output-method (action column-schema))
+       (let ((value (coerce-value value :data-type (slot-definition-type slot-meta-object))))
+         (if (eq (slot-definition-allocation slot-meta-object) :instance)
+             (funcall 
+              ;; method specialized on sequence type: elt, aref
+              (write-native-sequence-value
+               value 
+               (sequence-type column-schema) (slot-value table column-name) index)
+             ;; method specializing on allocation and resource type
+              (write-external-sequence-value
+              value (slot-definition-allocation column-schema)
+              (column-external-resource column-schema) index
+              table column-name)))))
+   #+END_SRC
+   
+
+   During table initialization, the resources is initialized using
+   the :resource keyword
+   #+BEGIN_SRC lisp
+     (make-column-table :a-resource resource :b-resource resource)   
+   #+END_SRC
+   with =:a-resource= a keyword that will accept the resource for
+   column =A= and so on.
+
+   
+
+   Internally, the slot-value contains a gss object, initialized
+   according to the :allocation and :resource specification.
+
+
+     
+     
+
+   Then we can do =(slot-value …)= and =(setf-slot-value …)=
+
+
+   Doing (slot-value table-column-name) with :stream allocation will 
+   Doing a (setf (slot-value table column-name) value) for :stream
+   requires passing a stream for value.  
+
+   
+   The column-table uses the gseq for the actual storage.  It uses
+   gseq's public interface.  column-table is responsible for creating
+   the necessary resources and cleaning up (such as opening and
+   closing streams or network connections).
+   
+   The gseq creation happens once the resource is specified.  This is
+   when the (setf (table-column table column-name) resource),
+   using :allocation to specify the protocol.
+
+
+   
+
+
+   #+BEGIN_SRC lisp
+     ;; Use :allocation keyword for storage
+     (setf (gseq column-schema) (make-gss specifications))
+   #+END_SRC
+
+   Setting and retreiving a sequence is triggered via around methods
+   on =(setf (slot-value ...))=
+   #+BEGIN_SRC lisp
+     (defmethod (setf slot-value-using-class) :around
+         (value (class column-table) table column-name)
+       (let ((gseq (call-next-method)))
+         (setf (gseq-seq accessor) value)))
+   #+END_SRC
+
+
+   
+   When the table is initialized, the each column schema is paired
+   with its accessor that specializes on the direction, format, and
+   souce.  Not all combinations of the three are possible.  For
+   example, ieee-floating-point is not compatible with in-lisp-image.
+
+   The protocol is independent of the column specification: sequence
+   type, and data type.  The column specification (if strict-p is t)
+   guarantees that writen and read data conform to it.  But the
+   internal storage may be different.
+
+
+   Reading and writing columns of data from a table and into a table
+   use the generic functions =read-column= and =write-column=.  Their
+   methods specialize on the column-accessor and use the value stored
+   in the slot.  That value can be a file stream, a CL sequence or an
+   assigned network interface.
+
+   The activities that happen upon a  read or a write requests are
+   along the following lines.  Read:
+   #+BEGIN_SRC lisp
+     (let* ((column-accessor (column-accessor column-schema))
+            (raw-data (read-column-internal
+                       column-accessor (slot-value table column-name)))
+            (sequence (coerce-sequence (sequence-type column-schema) raw-data)))
+       (assert (every #'identity
+                      (map 'vector (lambda (value)
+                                     (typep value (type column-schema)))
+                           sequence))
+               () (error "Data does not satisfy type specification"))
+       sequence)
+   #+END_SRC
+
+   A write request results in the following pseudo-code
+   #+BEGIN_SRC lisp
+     (let* ((column-accessor (column-accessor column-schema))
+            (sequence (coerce-sequence (sequence-type column-schema) input-sequence)))
+       (assert (every #'identity
+                      (map 'vector (lambda (value)
+                                     (typep value (type column-schema)))
+                           sequence))
+               () (error "Data does not satisfy type specification"))
+       (write-column-internal column-accessor (slot-value table column-name) sequence))
+   #+END_SRC
+
+   
+   
+
+   I consider the following types of protocols
+   - Native data
+   - File based data in CL readable format
+   - File based data in a binary format
+   - Other protocols with existing import/export functionality
+     
+     
+   The table gives some examples:
+     
+   | Format | Source | Slot           | Accessor         |
+   |        | Type   | Contents       | applied to slot  |
+   |--------+--------+----------------+------------------|
+   | Native | RAM    | sequence       | #'identity       |
+   | Native | File   | stream         | #'read           |
+   | Binary | File   | stream         | #'read-binary(1) |
+   | Grid   | File   | stream         | #'read(2)        |
+   | Grid   | RAM    | foreign-array  | #'identity       |
+   | X      | Server | Server-address | #'fetch-X(3)     |
+
+
+   - (1) :: =read-binary= is function that will read from stream, and
+            convert binary to native format
+   - (2) :: The =read= is capable of reading a grid written in the
+            =#m(...)= format
+   - (3) :: =fetch-X= fetches the data from the server.  X labels the
+            protocol 
+	    
+	    
+   The accessor specializes on: format and source type
+   #+BEGIN_SRC lisp
+     (defgeneric access-column (format contents)
+       (:method ((format sequence) (contents sequence))
+         contents)
+       (:method ((format sequence) (contents stream))
+         (read stream))
+       (:method ((format grid) (contents grid))
+         contents)
+       (:method ((format binary-ieee) (contents stream))
+         (read-ieee stream))
+       (:method ((format X) (contents X-server))
+         (fetch-X contents-)))
+   #+END_SRC
+   Following the data access, which retreives a sequence, the sequence
+   is normalized to the specified sequence type, and data type

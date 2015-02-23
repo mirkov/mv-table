@@ -15,12 +15,12 @@
   Each of these has impact on table growth and type checking
 
   The table storage options, by table type are[fn:1]
-  |              | N | VxV | SxV | V | M |
-  |--------------+---+-----+-----+---+---|
-  | Column table | \check | \check   | \check   | \check |   |
-  |--------------+---+-----+-----+---+---|
-  | Square table | \check | \check   | \check   | \check | \check |
-  | Matrix table |   | \check   |     | \check | \check |
+  |              | N      | VxV    | SxV    | V      | M      |
+  |--------------+--------+--------+--------+--------+--------|
+  | Column table | \check | \check | \check | \check |        |
+  |--------------+--------+--------+--------+--------+--------|
+  | Square table | \check | \check | \check | \check | \check |
+  | Matrix table |        | \check |        | \check | \check |
 
 
   
@@ -29,8 +29,8 @@
   |     | + Row | + Col |
   |-----+-------+-------|
   | N   | \check     |       |
-  | VxV | \check\star    |  \check     |
-  | SxV | \check\star    |   \check    |
+  | VxV | \check\star    | \check     |
+  | SxV | \check\star    | \check     |
   | V   |       |       |
   | M   |       |       |
 

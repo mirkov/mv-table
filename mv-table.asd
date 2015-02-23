@@ -12,12 +12,28 @@
   ((:module "init"
 	    :serial t
 	    :components
-	    ((:file "mv-table-package-def")))
-   (:module "mop"
+	    ((:file "table-dev-package-def")
+	     #+skip(:file "mv-table-package-def")
+	     (:file "column-table-package-def")
+	     (:file "utilities")))
+   #+skip(:module "mop-components"
 	    :serial t
 	    :components
 	    ((:file "table-meta-class")
-	     (:file "columns")
+	     (:file "table-options")
 	     (:file "table")
-	     (:file "table-row-accessor")))))
+	     (:file "table-row-accessor")))
+   (:module "column-table"
+	    :serial t
+	    :components
+	    (#+skip(:file "class-initializations")
+	     (:file "column-table-meta-class")
+	     #+skip(:file "column-table-columns")
+	     (:file "column-table-column-accessor")))
+   #+skip(:module "matrix-table")
+   #+skip(:module "rectangular-table")
+   #+skip(:module "user-interface"
+	    :serial t
+	    :components
+	    ((:file "user-interface")))))
 

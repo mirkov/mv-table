@@ -301,6 +301,9 @@
     definitions.  This is discussed later.
       
 *** Using reading and writing tables
+    :PROPERTIES:
+    :ID:       8e8kcw503kg0
+    :END:
 
     Files of column data (such as CSV) can be considered as tables.
     =mv-tables= can be access such files using its syntax.
@@ -719,8 +722,9 @@
        - {:initform column-initform} |
        - {:type type-specifier} |
        - {:documentation string}
-       - {:storage symbol} |
+       - {:sequence-type symbol} |
        - {:action symbol} |
+       - {:storage symbol} |
        - {:value-normalizer lambda-form} |
        - {:equality-predicate function | lambda-form } |
        - {:comparator function | lambda-form} |
@@ -744,7 +748,6 @@
        - {:author string} |
        - {keyword | (keyword [type & (:documentation string)])}*
 
-
 **** Arguments and values
      - table-name :: a non-nil symbol
      - supertable-name  :: a non-nil symbol
@@ -765,6 +768,11 @@
 
      Unlike many options, the table type cannot be overridden with
      =make-table=.
+
+     *Note*: Unlike CLOS, where the user can supply multiple slot
+     specifications, and the slot specification is a union of them,
+     table columns accept a single column specification.  If multiple
+     are given, the last one takes effect.
 
 ***** Table options
       :PROPERTIES:
@@ -834,37 +842,49 @@
       =:after= method has access to all the initialized columns, and
       can initialize other columns.
 
-      Column =:type= is specified with the =:type= column option.
-      This is only a specification.  It may or may not be enforced by
-      the writer methods.
+      If :default-initargs is not specified, :initform can be used to
+      specify the initial data.  This data should conform to :type and
+      :sequence-type specification.
 
-      For tables with =:column= organization, =:storage= specifies the
-      CL data structure that stores the data.  It can be one of
-      =:list= =:vector= =:foreign-vector=.
+      Type of data stored in the column is specified with the =:type=
+      option.  The read data is guaranteed to satisfy the type.
+      Written data will be coerced to this type.
 
-      The =:value-normalizer= function can be used for normalizing the
-      data for efficient storage, and in a form appropriate for the
-      comparison functions.
+      For tables with =:column= organization, =:sequence-type=
+      specifies the CL data structure that stores the data.  It can be
+      one of =:list= =:vector= =:foreign-vector=.
 
-      The =:comparator= and =:equality-predicate= functions are used
-      to compare column entries for sorting and equality purposes.
+      The :action keyword specifies types of action on the column: 
+      =:read= =:write= =:read/write=.  The :action must be compatible
+      with the column type.  Memory resident columns support all type.
+      File resident columns may support only one type, depending on
+      the implementation. 
+
+      The storage option can be used to override the table's storage
+      option.
+
+      The =:value-normalizer= is a function of two arguments: a value,
+      and the column schema.  This function can be used for
+      normalizing the data for efficient storage, and in a form
+      appropriate for the comparison functions.
+
+      The =:comparator= and =:equality-predicate= functions (both of
+      two arguments) are used to compare column entries for sorting
+      and equality purposes.
 
       =:null-value= is used to specify a value which when stored
       signals that the value has not been set yet.  Using
-      =:null-value= is optional.  Specifying it allows for some space
-      and speed savings.  Otherwise, the table keeps additional
-      storage with flags for set and unset cells.  A cell is set to
-      null with a call =(setf (cell reference) +null+)=
+      =:null-value= is optional.  This software does not access it.
+      This values is given as a convenience to the user to provide
+      documentation for the code that will be using the table
+      contents.
 
-      =:default-value= is the value returned, if the =:null-value= has
-      not been set.
+      =:default-value= is another convenience for the user[fn:5]
 
-      =:lazy-p= boolean signals that the column values can be computed
-      only when the actual value is requested.
-
-      Columns in an in =:memory= table can support all of =:read-only=
-      =:write-only= or =:read/write= actions.  The actions can be
-      changed while the table is in existence. 
+      =:lazy-p= boolean signals that the column values will be
+      computed only when the actual value is requested.  This applies
+      to special table storage types for which lazy computation makes
+      sense.
 
 ***** Table (column) initialization via =initform=
       Column =initform= is a form that is evaluated in a null lexical
@@ -895,7 +915,6 @@
          values assigned, via =initarg= or =default-initarg=
        - parent tables must be of same length.
        
-
 ***** Table inheritance
       A table can be defined to inherit the table schema and options
       from one or more tables.  The general rule is that the most
@@ -1350,6 +1369,11 @@
 
 [fn:4] We support user-defined lisp readers, provided the appropriate
 package is active - this responsibility is delegated to the user for now
+
+[fn:5] It could be used by a function (initialize-column name table
+&optional value) that would initialize a column based on known
+dimensions.  If the optional value is unspecified, the default value
+would be used.  Or should it be set to null value?
 
 
 
