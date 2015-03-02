@@ -1,4 +1,7 @@
-*~
+*/*.lisp~
+*.wx64fsl
+*.fasl
 *.fas
 *.lib
-*.fasl
+*.*~
+*~

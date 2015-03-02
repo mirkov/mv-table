@@ -7,15 +7,33 @@
   :license "Specify license here"
   :depends-on (#:lisp-unit
                #:alexandria
-               #:closer-mop)
+               #:closer-mop
+	       #:antik)
   :components
   ((:module "init"
 	    :serial t
 	    :components
 	    ((:file "table-dev-package-def")
 	     #+skip(:file "mv-table-package-def")
-	     (:file "column-table-package-def")
-	     (:file "utilities")))
+	     #+skip(:file "column-table-package-def")
+	     (:file "defaults")
+	     (:file "common-functions")
+	     (:file "clos-interface")
+	     (:file "flavored-table-class-instantiation")
+	     (:file "utilities")
+	     (:file "table-display")))
+   (:module "square-table"
+	    :description "Implementation of square tables that store
+same-type date in the whole table"
+	    :serial t
+	    :components
+	    ((:file "square-table-storage")
+	     (:file "square-table-schema")
+	     (:file "square-table-display")
+	     (:file "square-table")
+	     (:file "square-table-iterators")
+	     (:file "square-table-row+col-accessors")
+	     (:file "square-table-tests")))
    #+skip(:module "mop-components"
 	    :serial t
 	    :components
@@ -23,14 +41,13 @@
 	     (:file "table-options")
 	     (:file "table")
 	     (:file "table-row-accessor")))
-   (:module "column-table"
+   #+skip(:module "column-table"
 	    :serial t
 	    :components
 	    (#+skip(:file "class-initializations")
 	     (:file "column-table-meta-class")
 	     #+skip(:file "column-table-columns")
 	     (:file "column-table-column-accessor")))
-   #+skip(:module "matrix-table")
    #+skip(:module "rectangular-table")
    #+skip(:module "user-interface"
 	    :serial t

@@ -1,3 +1,13 @@
+2015-02-26  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* init/clos-interface.lisp (table-ref): Renamed table-value to
+	table-ref, following cl:aref
+
+2015-02-22  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* mv-table.asd: Started writing square table.  Leaving only the
+	necessary stuff for it, trying not to go to general
+
 2014-07-16  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* doc/user-doc/mv-table-user-documentation.org: Added
