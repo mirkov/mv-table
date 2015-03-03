@@ -15,12 +15,12 @@
   Each of these has impact on table growth and type checking
 
   The table storage options, by table type are[fn:1]
-  |              | N      | VxV    | SxV    | V      | M      |
-  |--------------+--------+--------+--------+--------+--------|
-  | Column table | \check | \check | \check | \check |        |
-  |--------------+--------+--------+--------+--------+--------|
-  | Square table | \check | \check | \check | \check | \check |
-  | Matrix table |        | \check |        | \check | \check |
+  |              | N | VxV | SxV | V | M |
+  |--------------+---+-----+-----+---+---|
+  | Column table | \check | \check   | \check   | \check |   |
+  |--------------+---+-----+-----+---+---|
+  | Square table | \check | \check   | \check   | \check | \check |
+  | Matrix table |   | \check   |     | \check | \check |
 
 
   
@@ -42,9 +42,9 @@
   the same data type in all the cells.
   | Type   | Checking? |
   |--------+-----------|
-  | Column | \check    |
-  | Square | \check    |
-  | Matrix | \times    |
+  | Column | \check         |
+  | Square | \check         |
+  | Matrix | \times         |
 
   Efficient type works only for V\times{}V and S\times{}V storage types.
   Internally, the vectors are defined to store values of a specified
@@ -101,6 +101,62 @@
   Thus, for example, (setf (row-index row) new-index) method will have
   a =:before= method for sequential file-based table that will check
   that new-index \geq current-index, or else issue an error.
+
+* CLOS & MOP of square tables
+
+  The general user inteface is similar to =defclass= and
+  =make-instance=.  The table is defined as:
+  #+BEGIN_SRC lisp
+    (deftable table-name (&rest super-tables)
+      ((row-labels-schema :title title
+                          :names (list of names)
+                          :equality-predicate equality-predicate
+                          :value-normalizer value-normalizer
+                          :accessor row-labels-schema)
+       (col-labels-schema  :title title
+                           :names (list of names)
+                           :equality-predicate equality-predicate
+                           :value-normalizer value-normalizer
+                           :accessor col-labels-schema)
+       (value-type :type :value-type
+                   :accessor value-type)
+       (value-normalizer :function :value-normalizer
+                         :accessor value-normalizer)
+       (equality-predicate :function :equality-predicate
+                           :accessor equality-predicate)
+       (comparator :function :comparator
+                   :accessor comparator)
+       (default-value :value :default-value
+                      :accessor default-value)
+       (adjustable :boolean :adjustable
+                   :reader adjustable)))
+                                       
+  #+END_SRC
+  It is instantiated with
+  #+BEGIN_SRC lisp
+    (make-table 'table-name &key storage device direction protocol)
+  #+END_SRC
+
+  A table definition can include inheritance from other tables.  The
+  rules for inheritance are as follows
+  
+  The rules for table inheritance are as follows:
+  - Names in the schema is the union of names in all tables
+  - The schema title is either explicitly define or a union of all
+    schema names
+  - All other slots values are obtained from:
+    - slot value specification
+    - Most specific slot value from the inherited tables
+    - Otherwise, it is undefined
+      
+      
+  This is how we go about it
+  - we define a meta-class square-table-mc
+  - we define =deftable= macro, similar to =defclass=
+  - we setup the slot processing method so that the slots processed
+    above are processed in a special manner
+    - Other slots are processed in the ordinary way
+  - We then define the slot inheritance
 
 * Footnotes
 

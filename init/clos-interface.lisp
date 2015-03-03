@@ -120,7 +120,11 @@ See documentation for COL-IDENTIFIER for more info"))
 
 ;;; 1D schemas
 (defclass 1d-schema ()
-  ((count :initform 0)
+  ((title :initarg :title
+	  :accessor title
+	  :documentation "A short symbol or string, succinctly
+describing the schema")
+   (count :initform 0)
    (names :initform (make-array 0 :adjustable t :fill-pointer 0)
 	  :accessor names
 	  :documentation "Data structure that stores the names")
@@ -142,7 +146,8 @@ Extensions to this schema may provide facilities for comparing rows or
 columns")
   (:default-initargs
    :value-normalizer #'pass-through
-    :equality-predicate #'equalp))
+    :equality-predicate #'equalp
+    :title nil))
 
 
 

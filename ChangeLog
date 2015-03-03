@@ -1,3 +1,8 @@
+2015-03-02  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* init/clos-interface.lisp (1d-schema): Added `title' slot to the
+	schema
+
 2015-02-26  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* init/clos-interface.lisp (table-ref): Renamed table-value to
