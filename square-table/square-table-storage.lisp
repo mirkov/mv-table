@@ -55,57 +55,57 @@
 
 ;;; Row and column identifiers
 (defmethod col-identifier ((2d-structure square-table-array)
-			   (schema col-labels-schema)
+			   (schema table-cols-schema)
 			   (col-name integer))
   col-name)
 
 (defmethod col-identifier ((2d-structure square-table-foreign-array)
-			   (schema col-labels-schema)
+			   (schema table-cols-schema)
 			   (col-name integer))
   col-name)
 
 (defmethod col-identifier ((2d-structure square-table-array)
-			   (schema col-labels-schema)
+			   (schema table-cols-schema)
 			   (col-name t))
   (position col-name (names schema)
 	    :test (equality-predicate schema)))
 
 (defmethod col-identifier ((2d-structure square-table-foreign-array)
-			   (schema col-labels-schema)
+			   (schema table-cols-schema)
 			   (col-name t))
   (position col-name (names schema)
 	    :test (equality-predicate schema)))
 
 (defmethod col-identifier ((2d-structure square-table-hash^2)
-			   (schema col-labels-schema)
+			   (schema table-cols-schema)
 			   (col-name t))
   col-name)
 
 
 (defmethod row-identifier ((2d-structure square-table-array)
-			   (schema row-labels-schema)
+			   (schema table-rows-schema)
 			   (row-name integer))
   row-name)
 
 (defmethod row-identifier ((2d-structure square-table-foreign-array)
-			   (schema row-labels-schema)
+			   (schema table-rows-schema)
 			   (row-name integer))
   row-name)
 
 (defmethod row-identifier ((2d-structure square-table-array)
-			   (schema row-labels-schema)
+			   (schema table-rows-schema)
 			   (row-name t))
   (position row-name (names schema)
 	    :test (equality-predicate schema)))
 
 (defmethod row-identifier ((2d-structure square-table-foreign-array)
-			   (schema row-labels-schema)
+			   (schema table-rows-schema)
 			   (row-name t))
   (position row-name (names schema)
 	    :test (equality-predicate schema)))
 
 (defmethod row-identifier ((2d-structure square-table-hash^2)
-			   (schema row-labels-schema)
+			   (schema table-rows-schema)
 			   (row-name t))
   row-name)
 

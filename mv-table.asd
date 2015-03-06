@@ -17,8 +17,10 @@
 	     #+skip(:file "mv-table-package-def")
 	     #+skip(:file "column-table-package-def")
 	     (:file "defaults")
+	     (:file "testing-setup")
 	     (:file "common-functions")
 	     (:file "clos-interface")
+	     (:file "table-schema")
 	     (:file "flavored-table-class-instantiation")
 	     (:file "utilities")
 	     (:file "table-display")))
@@ -27,10 +29,11 @@
 same-type date in the whole table"
 	    :serial t
 	    :components
-	    ((:file "square-table-storage")
+	    ((:file "square-table-mop")
 	     (:file "square-table-schema")
-	     (:file "square-table-display")
+	     (:file "square-table-storage")
 	     (:file "square-table")
+	     (:file "square-table-display")
 	     (:file "square-table-iterators")
 	     (:file "square-table-row+col-accessors")
 	     (:file "square-table-tests")))

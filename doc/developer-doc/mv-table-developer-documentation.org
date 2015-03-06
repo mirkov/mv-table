@@ -15,24 +15,24 @@
   Each of these has impact on table growth and type checking
 
   The table storage options, by table type are[fn:1]
-  |              | N | VxV | SxV | V | M |
-  |--------------+---+-----+-----+---+---|
-  | Column table | \check | \check   | \check   | \check |   |
-  |--------------+---+-----+-----+---+---|
-  | Square table | \check | \check   | \check   | \check | \check |
-  | Matrix table |   | \check   |     | \check | \check |
+  |              | N      | VxV    | SxV    | V      | M      |
+  |--------------+--------+--------+--------+--------+--------|
+  | Column table | \check | \check | \check | \check |        |
+  |--------------+--------+--------+--------+--------+--------|
+  | Square table | \check | \check | \check | \check | \check |
+  | Matrix table |        | \check |        | \check | \check |
 
 
   
   A table can add rows on the storage options (\star is for square tables
   where all columns have equal length):
-  |     | + Row | + Col |
-  |-----+-------+-------|
-  | N   | \check     |       |
-  | VxV | \check\star    | \check     |
-  | SxV | \check\star    | \check     |
-  | V   |       |       |
-  | M   |       |       |
+  |     | + Row       | + Col  |
+  |-----+-------------+--------|
+  | N   | \check      |        |
+  | VxV | \check\star | \check |
+  | SxV | \check\star | \check |
+  | V   |             |        |
+  | M   |             |        |
 
   Columns are added by redefining a table, much as a class can be
   redefined by recompiling =defclass=.  All table storage types can
@@ -42,9 +42,9 @@
   the same data type in all the cells.
   | Type   | Checking? |
   |--------+-----------|
-  | Column | \check         |
-  | Square | \check         |
-  | Matrix | \times         |
+  | Column | \check    |
+  | Square | \check    |
+  | Matrix | \times    |
 
   Efficient type works only for V\times{}V and S\times{}V storage types.
   Internally, the vectors are defined to store values of a specified
@@ -105,50 +105,54 @@
 * CLOS & MOP of square tables
 
   The general user inteface is similar to =defclass= and
-  =make-instance=.  The table is defined as:
+  =make-instance=.  The table is defined with several predefined slots
+  slots and several properties.
   #+BEGIN_SRC lisp
     (deftable table-name (&rest super-tables)
       ((row-labels-schema :title title
                           :names (list of names)
                           :equality-predicate equality-predicate
+                          :comparator names-comparator
                           :value-normalizer value-normalizer
-                          :accessor row-labels-schema)
+                          :accessor row-labels-schema-accessor)
        (col-labels-schema  :title title
                            :names (list of names)
                            :equality-predicate equality-predicate
+                           :comparator names-comparator
                            :value-normalizer value-normalizer
-                           :accessor col-labels-schema)
-       (value-type :type :value-type
-                   :accessor value-type)
-       (value-normalizer :function :value-normalizer
-                         :accessor value-normalizer)
-       (equality-predicate :function :equality-predicate
-                           :accessor equality-predicate)
-       (comparator :function :comparator
-                   :accessor comparator)
-       (default-value :value :default-value
-                      :accessor default-value)
-       (adjustable :boolean :adjustable
-                   :reader adjustable)))
-                                       
+                           :accessor col-labels-schema-accessor)
+       (source ))
+       (:documentation "Documentation")
+       (:value-type value-type)
+       (:value-normalizer value-normalizer)
+       (:equality-predicate equality-predicate)
+       (:comparator comparator)
+       (:default-value default-value)
+       (:adjustable-p adjustable-p)))
   #+END_SRC
   It is instantiated with
   #+BEGIN_SRC lisp
     (make-table 'table-name &key storage device direction protocol)
   #+END_SRC
+  The table definition can have other slots, which behave entirely as
+  the usual class slots.
 
   A table definition can include inheritance from other tables.  The
-  rules for inheritance are as follows
+  rules for inheritance are as follows:
   
   The rules for table inheritance are as follows:
-  - Names in the schema is the union of names in all tables
-  - The schema title is either explicitly define or a union of all
-    schema names
-  - All other slots values are obtained from:
-    - slot value specification
-    - Most specific slot value from the inherited tables
-    - Otherwise, it is undefined
-      
+  - Schema:
+    - Names in the schema is the union of names in all tables.
+    - Ordering of the names, and removal of duplicates is accomplished
+      using the comparator and equality-predicate properties
+      - If these are undefined, then sorting or removal of duplicates
+        is not performed
+    - Only names are inherited.  All other properties are as assigned
+      (or not)
+  - Other table properties are not inherited, but used as assigned (or
+    not assigned)
+  - Inheritance of other table slots follow the usual CLOS
+    specification
       
   This is how we go about it
   - we define a meta-class square-table-mc
