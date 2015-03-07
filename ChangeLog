@@ -1,3 +1,13 @@
+2015-03-05  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* square-table/square-table-tests.lisp (:table-dev): Fixed bug
+	where I was refering to obsoletet schema classes
+
+	* square-table/square-table-storage.lisp (:table-dev): Fixed bug
+	where I was refering to obsolete schema classes
+
+	* mv-table.asd (#:mv-table): Added missing files
+
 2015-03-02  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* init/clos-interface.lisp (1d-schema): Added `title' slot to the

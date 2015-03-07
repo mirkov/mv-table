@@ -2,9 +2,9 @@
 
 
 (define-test arr-table
-  (let* ((rls (make-row-labels-schema :names *employees*
+  (let* ((rls (make-table-rows-schema *people-names*
 				      :equality-predicate 'eql))
-	 (cls (make-col-labels-schema :names *days-of-week*
+	 (cls (make-table-cols-schema *days-of-week*
 				      :equality-predicate 'eql))
 	 (table (make-square-table rls cls
 				   :default-value 3.14
@@ -15,9 +15,9 @@
     (assert-equal 2.17 (table-ref table 'koichi 'tue))
     (assert-equal '(7 4) (array-dimensions (2d-structure (data-matrix table))))
     (assert-equal '(7 4) (table-dimensions table)))
-  (let* ((rls (make-row-labels-schema :names *employees*
+  (let* ((rls (make-table-rows-schema *people-names*
 				      :equality-predicate 'eql))
-	 (cls (make-col-labels-schema :names *days-of-week*
+	 (cls (make-table-cols-schema *days-of-week*
 				      :equality-predicate 'eql))
 	 (table (make-square-table rls cls
 				   :default-value 3.14
