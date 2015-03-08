@@ -16,51 +16,19 @@
 
 (defmethod validate-superclass
     ((class square-table-class) (superclass standard-class))
-  t)
-
-#+skip(defmethod ensure-class-using-class ((class square-table-class)
-				     table-name
-				     &rest keys
-				     &key metaclass
-				       direct-superclasses
-				       ;; These correspond to table properties
-				       (value-type nil value-type-p)
-				       (value-normalizer nil value-normalizer-p)
-				       (equality-predicate nil equality-predicate-p)
-				       (comparator nil comparator-p)
-				       (default-value nil default-value-p)
-				       (adjustable nil adjustable-p)
-				       &allow-other-keys)
-  (declare (ignore value-type value-normalizer
-		   equality-predicate comparator
-		   default-value adjustable))
-  (let ((i-keys keys))
-    (remf i-keys metaclass)
-    (remf i-keys direct-superclasses)
-    (unless value-type-p
-      (remf i-keys :value-type))
-    (unless value-normalizer-p
-      (remf i-keys :value-normalizer))
-    (unless equality-predicate-p
-      (remf i-keys :equality-predicate))
-    (unless comparator-p
-      (remf i-keys :comparator))
-    (unless default-value-p
-      (remf i-keys :default-value))
-    (unless adjustable-p
-      (remf i-keys :adjustable))
-    (apply #'make-instance 'square-table-class
-	   :class-name table-name
-	   :metaclass metaclass
-	   :direct-superclasses direct-superclasses
-	   i-keys)))
+  "We insist that table superclasses may be only superclassed"
+  #+skip(break)
+  t #+skip(typep superclass 'square-table-class))
 
 (defclass schema-slot-mixin% ()
   ((title :reader title)
-   (names :reader names)
-   (equality-predicate :reader equality-predicate)
-   (comparator :reader comparator)
-   (value-normalizer :reader value-normalizer))
+   (names :reader names :initarg :names)
+   (equality-predicate :reader equality-predicate
+		       :initarg :equality-predicate)
+   (comparator :reader comparator
+	       :initarg :comparator)
+   (value-normalizer :reader value-normalizer
+		     :initarg :value-normalizer))
   (:documentation "Defines additional options for the slots that will
   store the schema
 
@@ -75,10 +43,12 @@ This class is meant to be inherited, never instantiated by itself"))
 					 &rest initargs
 					 &key name)
   (declare (ignore initargs))
-  (if (or (eql name 'table-rows-schema)
-	  (eql name 'table-cols-schema))
-      (find-class 'schema-direct-slot-definition)
-      (find-class 'standard-direct-slot-definition)))
+  (print name)
+  (find-class
+   (print (if (print (or (eql name 'row-labels-schema)
+		  (eql name 'col-labels-schema)))
+	      'schema-direct-slot-definition
+	      'standard-direct-slot-definition))))
 
 (defclass schema-effective-slot-definition
     (standard-effective-slot-definition schema-slot-mixin%)
@@ -89,6 +59,7 @@ This class is meant to be inherited, never instantiated by itself"))
 					    &rest initargs
 					    &key name)
   (declare (ignore initargs))
+  (break)
   (if (or (eql name 'table-rows-schema)
 	  (eql name 'table-cols-schema))
       (find-class 'schema-effective-slot-definition)
@@ -106,6 +77,7 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
 - For all other properties (title, comparator, equality-predicate,
   value-normalizer, we exclusively use the values from the most
   specific schema"
+  (break)
   (let ((effective-slot-definition (call-next-method)))
     (when (or (eql slot-name 'table-rows-schema)
 	      (eql slot-name 'table-cols-schema))
@@ -132,5 +104,6 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
 
 (defmethod compute-slots ((class square-table-class))
   "We compute slots, and return them.  At some later st"
+  (break)
   (let ((normal-slots (call-next-method)))
     normal-slots))

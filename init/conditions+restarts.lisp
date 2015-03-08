@@ -74,3 +74,71 @@
 		     (device c))
 	     (format s "Protocol flavor is of type ~a, but should be TABLE-PROTOCOL"
 		     (protocol c)))))
+
+
+(define-condition table-option-error (error)
+  ((name :initarg :option-name
+	 :reader option-name))
+  (:documentation "Base condition for errors stemming from invalid
+  table option definition"))
+
+(define-condition table-option-not-function (table-option-error)
+  ()
+  (:report (lambda (c s)
+	     (format s "Table option ~a value is not a function" (option-name c)))))
+
+(define-condition illegal-table-option (table-option-error)
+  ()
+  (:report (lambda (c s)
+	     (format s "Table option ~a is not allowed" (option-name c)))))
+
+(define-condition duplicate-table-option (table-option-error)
+  (#+skip(:table-options :initarg :table-options
+		  :reader table-options))
+  (:report (lambda (c s)
+	     (format s "Table option ~a is a duplicate" (option-name c)))))
+
+(define-condition illegal-table-name (error)
+  ((name :initarg :table-name
+	 :reader table-name))
+  (:report (lambda (c s)
+	     (format s "~a is an invalid table name" (table-name c)))))
+
+(define-condition illegal-table-slot (error)
+  ((name :initarg :slot-name
+	 :reader slot-name)))
+
+(define-condition illegal-table-slot-name (illegal-table-slot)
+  ()
+  (:report (lambda (c s)
+	     (format s "~a is an invalid table slot name" (slot-name c)))))
+
+(define-condition duplicate-table-slot (illegal-table-slot)
+  ()
+  (:report (lambda (c s)
+	     (format s "~a is a duplicate table slot" (slot-name c)))))
+
+(define-condition illegal-table-slot-option (illegal-table-slot)
+  ((option-name :initarg :slot-option-name
+		:reader slot-option-name)))
+
+(define-condition duplicate-table-slot-option (illegal-table-slot-option)
+  ()
+  (:report (lambda (c s)
+	     (format s "Duplicate option ~a for slot ~a"
+		     (slot-option-name c)
+		     (slot-name c)))))
+
+(define-condition illegal-table-slot-option-value (illegal-table-slot-option)
+  ((option-value :initarg :slot-option-value
+		 :reader slot-option-value))
+  (:report (lambda (c s)
+	     (format s "Slot ~a option ~a value ~a is illegal"
+		     (slot-name c) (slot-option-name c)
+		     (slot-option-value c)))))
+
+(define-condition missing-table-slot-option-value (illegal-table-slot-option-value)
+  ()
+  (:report (lambda (c s)
+	     (format s "Slot ~a option ~a is missing a value"
+		     (slot-name c) (slot-option-name c)))))
