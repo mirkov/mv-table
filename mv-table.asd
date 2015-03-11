@@ -30,6 +30,8 @@ same-type date in the whole table"
 	    :serial t
 	    :components
 	    ((:file "square-table-mop")
+	     (:file "def-square-table")
+	     (:file "def-square-table-tests")
 	     (:file "square-table-schema")
 	     (:file "square-table-storage")
 	     (:file "square-table")

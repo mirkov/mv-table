@@ -1,7 +1,10 @@
 (in-package :table-dev)
 
 (defclass square-table-class (standard-class)
-  ((value-type :initarg :value-type
+  ((data-matrix :reader data-matrix)
+   (row-count :reader :row-count)
+   (col-count :reader :col-count)
+   (value-type :initarg :value-type
 	       :accessor value-type)
    (value-normalizer :initarg :value-normalizer
 		     :accessor value-normalizer)
@@ -12,12 +15,13 @@
    (default-value :initarg :default-value
      :accessor default-value)
    (adjustable :initarg :adjustable
-	       :reader adjustable)))
+	       :reader adjustable))
+  (:documentation "Metaclass for instances of 'square-table"))
 
 (defmethod validate-superclass
     ((class square-table-class) (superclass standard-class))
   "We insist that table superclasses may be only superclassed"
-  #+skip(break)
+  #+breaks-on(break)
   t #+skip(typep superclass 'square-table-class))
 
 (defclass schema-slot-mixin% ()
@@ -43,7 +47,6 @@ This class is meant to be inherited, never instantiated by itself"))
 					 &rest initargs
 					 &key name)
   (declare (ignore initargs))
-  (print name)
   (find-class
    (print (if (print (or (eql name 'row-labels-schema)
 		  (eql name 'col-labels-schema)))
@@ -59,7 +62,7 @@ This class is meant to be inherited, never instantiated by itself"))
 					    &rest initargs
 					    &key name)
   (declare (ignore initargs))
-  (break)
+  #+breaks-on(break)
   (if (or (eql name 'table-rows-schema)
 	  (eql name 'table-cols-schema))
       (find-class 'schema-effective-slot-definition)
@@ -77,7 +80,7 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
 - For all other properties (title, comparator, equality-predicate,
   value-normalizer, we exclusively use the values from the most
   specific schema"
-  (break)
+  #+breaks-on(break)
   (let ((effective-slot-definition (call-next-method)))
     (when (or (eql slot-name 'table-rows-schema)
 	      (eql slot-name 'table-cols-schema))
@@ -104,6 +107,6 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
 
 (defmethod compute-slots ((class square-table-class))
   "We compute slots, and return them.  At some later st"
-  (break)
+  #+breaks-on(break)
   (let ((normal-slots (call-next-method)))
     normal-slots))

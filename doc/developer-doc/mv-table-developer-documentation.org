@@ -108,7 +108,7 @@
   =make-instance=.  The table is defined with several predefined slots
   slots and several properties.
   #+BEGIN_SRC lisp
-    (deftable table-name (&rest super-tables)
+    (deftable some-table-definition (&rest super-tables)
       ((row-labels-schema :title title
                           :names (list of names)
                           :equality-predicate equality-predicate
@@ -120,8 +120,7 @@
                            :equality-predicate equality-predicate
                            :comparator names-comparator
                            :value-normalizer value-normalizer
-                           :accessor col-labels-schema-accessor)
-       (source ))
+                           :accessor col-labels-schema-accessor))
        (:documentation "Documentation")
        (:value-type value-type)
        (:value-normalizer value-normalizer)
@@ -132,7 +131,9 @@
   #+END_SRC
   It is instantiated with
   #+BEGIN_SRC lisp
-    (make-table 'table-name &key storage device direction protocol)
+    (make-table 'some-table-definition &key storage device direction protocol
+                :data-source "some text"
+                :documentation "more text")
   #+END_SRC
   The table definition can have other slots, which behave entirely as
   the usual class slots.
@@ -154,6 +155,23 @@
   - Inheritance of other table slots follow the usual CLOS
     specification
       
+    
+  Following the example above, under the hood we have the following:
+  - A class =some-table-definition= that has defined row and column
+    labels schema and various table and schema properties
+    - The class does not specify the data format, storage, direction,
+      protocol.  These have sensible defaults, which can be overridden
+      during instantiation.
+  - Instantiation of =some-table-definition= creates an object.  This
+    object has accessors for table values, rows, columns and other
+    properties.  These accessors are the public interface to tables. 
+    - All intances of =some-table-definition= share the same
+      properties.  Thus, the slots have allocation =:class=
+  - The =some-table-definition-class= is an instance of the
+    =square-table-class= metaclass.  The meta-class enables the slot
+    inheritance machinery described above.
+
+
   This is how we go about it
   - we define a meta-class square-table-mc
   - we define =deftable= macro, similar to =defclass=

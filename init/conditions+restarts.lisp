@@ -122,6 +122,12 @@
   ((option-name :initarg :slot-option-name
 		:reader slot-option-name)))
 
+(define-condition missing-table-slot-option (illegal-table-slot-option)
+  ()
+  (:report (lambda (c s)
+	     (format s "Missing option ~a in slot ~a"
+		     (slot-option-name c) (slot-name c)))))
+
 (define-condition duplicate-table-slot-option (illegal-table-slot-option)
   ()
   (:report (lambda (c s)

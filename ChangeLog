@@ -1,3 +1,8 @@
+2015-03-08  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* square-table/def-square-table.lisp (): Remove all
+	tests that table or slot options are functions.
+
 2015-03-05  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* square-table/square-table-tests.lisp (:table-dev): Fixed bug
