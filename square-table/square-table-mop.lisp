@@ -1,13 +1,14 @@
 (in-package :table-dev)
 
 (defclass square-table-class (standard-class)
-  ((data-matrix :reader data-matrix)
+  (   #+skip(value-normalizer :initarg :value-normalizer
+		     :accessor value-normalizer)
+#|(data-matrix :reader data-matrix)
    (row-count :reader :row-count)
    (col-count :reader :col-count)
    (value-type :initarg :value-type
 	       :accessor value-type)
-   (value-normalizer :initarg :value-normalizer
-		     :accessor value-normalizer)
+
    (equality-predicate :initarg :equality-predicate
 		       :accessor equality-predicate)
    (comparator :initarg :comparator
@@ -15,7 +16,7 @@
    (default-value :initarg :default-value
      :accessor default-value)
    (adjustable :initarg :adjustable
-	       :reader adjustable))
+	       :reader adjustable)|#)
   (:documentation "Metaclass for instances of 'square-table"))
 
 (defmethod validate-superclass
@@ -47,9 +48,11 @@ This class is meant to be inherited, never instantiated by itself"))
 					 &rest initargs
 					 &key name)
   (declare (ignore initargs))
+  #+breaks-on(break)
+  (print name)
   (find-class
-   (print (if (print (or (eql name 'row-labels-schema)
-		  (eql name 'col-labels-schema)))
+   (print (if (or (eql name 'row-labels-schema)
+		  (eql name 'col-labels-schema))
 	      'schema-direct-slot-definition
 	      'standard-direct-slot-definition))))
 
@@ -63,10 +66,12 @@ This class is meant to be inherited, never instantiated by itself"))
 					    &key name)
   (declare (ignore initargs))
   #+breaks-on(break)
-  (if (or (eql name 'table-rows-schema)
-	  (eql name 'table-cols-schema))
-      (find-class 'schema-effective-slot-definition)
-      (find-class 'standard-effective-slot-definition)))
+  (print name)
+  (find-class
+   (print (if (or (eql name 'row-labels-schema)
+		  (eql name 'col-labels-schema))
+	      'schema-effective-slot-definition
+	      'standard-effective-slot-definition))))
 
 (defmethod compute-effective-slot-definition ((class square-table-class)
 					      slot-name
@@ -82,8 +87,9 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
   specific schema"
   #+breaks-on(break)
   (let ((effective-slot-definition (call-next-method)))
-    (when (or (eql slot-name 'table-rows-schema)
-	      (eql slot-name 'table-cols-schema))
+    (when (or (eql slot-name 'row-labels-schema)
+	      (eql slot-name 'col-labels-schema))
+      #+breaks-on(break)
       (let ((effective-names (mappend #'names direct-slot-definitions))
 	    (first-direct-slot-definition (first direct-slot-definitions)))
 	(with-slots (equality-predicate comparator title value-normalizer)
@@ -91,8 +97,11 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
 	(when (slot-boundp first-direct-slot-definition 'equality-predicate)
 	  (setf effective-names
 		(remove-duplicates effective-names :test equality-predicate)))
-	(with-slots (equality-predicate-1 comparator-1 title-1
-					  names-1 value-normalizer-1)
+	(with-slots ((equality-predicate-1 equality-predicate)
+		     (comparator-1 comparator)
+		     (title-1 title)
+		     (names-1 names)
+		     (value-normalizer-1 value-normalizer))
 	    effective-slot-definition
 	  (setf names-1 effective-names)
 	  (when (slot-boundp first-direct-slot-definition 'equality-predicate)
@@ -106,7 +115,23 @@ TABLE-ROWS-SCHEMA and TABLE-COLS-SCHEMA:
     effective-slot-definition))
 
 (defmethod compute-slots ((class square-table-class))
-  "We compute slots, and return them.  At some later st"
+  "We compute slots, and return them"
   #+breaks-on(break)
-  (let ((normal-slots (call-next-method)))
-    normal-slots))
+  (let ((normal-slots (call-next-method))
+	(data-matrix-slot
+	 (make-instance 'standard-effective-slot-definition
+			:name 'data-matrix
+			:documentation "The data structure that stores the data")))
+    #+break-on(break)
+    (cons data-matrix-slot normal-slots)))
+
+(defmethod allocate-instance ((class square-table-class) &rest initargs)
+  (let ((instance (call-next-method)))
+    #+break-on(break)
+    instance))
+
+(defmethod allocate-instance ((class schema-direct-slot-definition)
+				      &rest initargs)
+  (let ((instance (call-next-method)))
+    #+break-on(break)
+    instance))

@@ -98,6 +98,12 @@
   (:report (lambda (c s)
 	     (format s "Table option ~a is a duplicate" (option-name c)))))
 
+(define-condition table-option-missing-value (table-option-error)
+  ()
+  (:report (lambda (c s)
+	     (format s "Table option ~a is missing a value"
+		     (option-name c)))))
+
 (define-condition illegal-table-name (error)
   ((name :initarg :table-name
 	 :reader table-name))
